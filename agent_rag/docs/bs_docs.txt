@@ -1,0 +1,367 @@
+Na kratko o podjetju
+V podjetju Business Solutions nudimo široko paleto storitev in rešitev, s katerimi vam bomo pomagali digitalizirati celotno poslovanje, od upravljanja financ, vodenja projektov, proizvodnje in skladiščnega poslovanja do spletnih rešitev. 
+
+V 25 letih svojega delovanja smo izdelali več kot 700 unikatnih implementacij poslovnoinformacijskih rešitev. Naše bogato in široko znanje pa nista ključna odlika, saj nas odlikuje posluh za vaše želje in potrebe ter sposobnost, da slednje pretvorimo v praktične in učinkovite rešitve. 
+
+Zakaj izbrati Business Solutions
+
+Ker smo zanesljiv in preverjen partner
+Kot vodilni ponudnik poslovnih rešitev Microsoft podjetjem v zasebnem in javnem sektorju zagotavljamo prilagojene poslovnoinformacijske sisteme na osnovi programskih izdelkov in storitev Microsoft Dynamics 365, Microsoft 365 in Microsoft Azure. 
+
+
+Ker vaš celotni poslovni in proizvodni proces povezujemo v koherentno celoto 
+S profesionalnimi storitvami na področju svetovanja, razvoja, vpeljave in vzdrževanja strojne in programske opreme na enem mestu zagotavljamo podporo za vse ravni poslovnoinformacijskega sistema. Vse vaše oddelke tako povezujemo v koherentno in digitalizirano celoto, ki učinkovito povezuje zaposlene, poslovne partnerje, kupce in dobavitelje.
+
+
+Ker vam zagotavljamo najboljše, kar je mogoče 
+Zadnje svetovne tehnološke dosežke nadgrajujemo z originalnimi inovativnimi rešitvami in vam tako zagotavljamo najnaprednejše rešitve, da ste vedno korak pred konkurenco. 
+
+
+Ker smo z vami na vsakem koraku digitalizacije 
+Digitalizacija je zapleten in dolgotrajen proces, zato potrebujete zanesljivega partnerja s širokim spektrom znanj. Pomagali vam bomo pri vsakem koraku implementacije, tudi pri konfiguraciji in uporabi posameznih orodij. Napredna orodja namreč niso dovolj, potrebujete tudi znanje in pomoč pri njihovi uporabi. 
+
+Partnerstva in certifikati
+Microsoft Partner
+ Gold Enterprise Resource Planning
+ Gold Data Analytics
+ Silver Application Integration
+ Silver Cloud Productivity
+ Silver Small and Midmarket Cloud Solutions
+Partnerji spletnih platform in poslovnih aplikacij
+ Microsoft
+ Umbraco
+ Lenovo
+ 
+ 
+ 
+ Kako poteka proces digitalizacije
+V podjetju Business Solutions smo razvili lastno metodologijo implementacije, poimenovana PIM – Power Implementation Methodology. Metodologija temelji na znanju in izkušnjah, ki smo jih pridobili pri številnih uspešno izvedenih implementacijah in je neposredno povezana z orodji in rešitvami, ki so nastale kot plod našega znanja.
+
+Ključna prednost metodologije je, da je izjemno prilagodljiva. Tako jo lahko preprosto prilagajamo velikosti, kompleksnosti in specifičnim željam naročnikov.
+
+
+
+vsaj 6 mesecev pred zagonom
+Analiza procesov
+Analiza poslovnih procesov
+Izdelava dokumentacije
+vsaj 5 mesecev pred zagonom
+Oblikovanje sistema
+Predlog potrebnih funkcionalnosti
+Načrt dopolnitev sistema
+vsaj 4-3 mesece pred zagonom
+Razvoj in testiranje
+Razvoj dodatnih rešitev
+Testiranje sistema
+vsaj 3 mesece pred zagonom
+Uvedba rešitve
+Nastavitev sistema
+Priprava testnega okolja
+vsaj 2-1 mesec pred zagonom
+Uvajanje uporabnikov
+Delavnice po področjih
+1 mesec pred zagonom
+Namestitev
+Prenos podatkov
+Potrditev funkcionalnosti
+Dodatno usposabljanje uporabnikov
+Dan D
+Zagon
+Od zagona dalje
+Podpora
+Optimizacija sistema
+Podpora uporabnikom
+
+
+
+
+Naš vpliv na vaše poslovanje
+Podjetjem omogočamo uspešnejše in učinkovitejše poslovanje z prilagodljivimi in po meri razvitimi digitalnimi rešitvami, ki so prilagojene različnim tipom in področjem poslovanja.
+
+
+
+Dovolite nam, da vam pomagamo pri vašem izzivu!
+Kontaktirajte nas in začnite svojo pot.
+
+
+
+Parnad
+Podjetje parnad s strateškim digitalnim marketingom do novih prodajalecv in dviga prodaje
+Podjetje Parnad d.o.o. je pooblaščeni zastopnik za sesalce Vorwerk, ki so na slovenskem trgu prisotni že od leta 1990, hčerinski podjetji pa ima tudi na Hrvaškem in v Srbiji. Prodajni model podjetja temeljil na terenski prodaji, kjer je razvejana ekipa prodajalcev po celotni Sloveniji predstavljala sesalce Vorwerk na domu.
+
+Izziv
+Spremembe v navadah kupcev
+V zadnjih letih je podjetje začelo opažati spremembe v nakupovalnih navadah. Ljudje so pričeli vse bolj nakupovati na spletu in se za nakup velikokrat odločali na podlagi priporočil bližnjih ali znancev. Leta 2019 situacijo še dodatno pretrese Covd-19, ki praktično omeji vse stike in s tem zaostri tudi pogoje za prodajo na domu.
+
+Parnad se tako leta 2019 odloči za nov model prodaje – part time, po katerem lahko vsak, ki kupi njihov sesalni set komplet postane bodisi prodajalec, bodisi rekruter novih prodajalcev in uvede digitalne demonstracije produktov. Parnad stopi v stik s podjetjem Business Solutions s prošnjo po razvoju digitalne kampanje, s pomočjo katere bo pridobilo nove ambasadorje.
+
+Rešitev
+Oblikovanje strategije za doseganje ciljih person
+V marketinški ekipi smo najprej opravili serijo pogovorov z vodilnimi v podjetju Parnad in njihovimi ključnimi prodajalci, pregledali njihovo analitiko in način komunikacije ter komentarje na družbenih omrežjih. Na tak način smo se dobro seznanili z njihovim poslovanjem in produkti, predvsem pa njihovim načinom prodaje.
+
+Nato smo začeli s postavljanjem strategije kampanje.
+
+Ugotovili smo, da zasledujemo več ciljev. Primarni cilj je bil rekrutiranje novih ambasadorjev in pridobivanje kvalificiranih kontaktov, kot drugo pa je bilo pomembno, da ustvarimo afiniteto do blagovne znamke Vorwerk in dvignemo prepoznavnost podjetja.
+
+Po začetni analizi smo zaznali, da naslavljamo tri skupine potencialnih ambasadorjev:
+
+milenjice, stare med 20 in 35 let, ki iščejo fleksibilno obliko dela, ki jim bo dala dovolj svobode;
+mamice, stare 30 +, ki iščejo “part-time” obliko dela, ki jim bo prinesla nekaj dodatnega zaslužka in
+starejšo populacijo, 60 +, ki so bodisi že v pokoju ali se mu bližajo in iščejo dodaten vir prihodkov.
+Vsako ciljno skupino smo nagovarjali z zanjo prilagojenimi sporočili in grafikami, oglase pa smo plasirali na kanale, kjer so se zadrževali – primarno na Facebook in na nišno usmerjene spletne portale.
+
+Pri kampanji je bilo ključno, da pridobimo kvalificirane kontakte ali drugače rečeno, da pridobimo kontakte oseb, ki so resnično zainteresirane, da postanejo ambasadorji, zato smo se odločili za tristopenjsko segmentiranje kontaktov. Kaj pomeni to v praksi?
+
+Zamislimo si, da je Branko, ki je star 28 let in ga zanima vir dodatnega zaslužka, na Facebooku. Algoritem Facebooka ga zazna kot potencialnega ambasadorja in mu prikaže naš oglas. Branko klikne na oglas in pristane na naši pristajalni strani, ki mu ponuja samo nekaj osnovnih informacij o ambasadorstvu. Branka zanima več in odda svoj e-mail. Že v naslednjem trenutku prejme e-mail, kjer lahko s klikom obišče stran, ki ponuja več informacij. Branko pristane na drugi pristajalni strani, kjer si ogleda daljši razlagalni video, ki mu razloži mehaniko delovanja ambasadorstva in prednosti, ki jih bo s sodelovanjem prejel. Branka sodelovanje zanima zato odda še druge podatke in čaka na klic.
+
+Branko je torej moral izpolniti tri aktivnosti – oddati e-mail na prvi pristajalni strani, odpreti e-mail in oddati podatke na drugi pristajalni strani – da je postal kvalificiran kontakt, ki je bil predan podjetju Parnad za kontaktiranje. S takšno strategijo smo zagotovili, da je podjetje prejelo kakovostne kontakte in s tem visoko zainteresirane in motivirane osebe, ki so postali novi prodajalci podjetja Parnad, poleg tega pa tudi veliko število kakovostnih kontaktov, ki sicer še niso bili pripravljeni postati prodajalci, ampak jih podjetje še danes obvešča o tem in drugih prodajnih programih.
+
+
+V podjetju Parnad smo že večkrat poskušali naslavljati večjo množico ljudi na digitalnih kanalih, ampak nismo bili uspešni, zato smo bili skeptični tudi, ko so nam v podjetju Business Solutions zatrjevali, da bomo s kampanjo zagotovo pridobili nove ambasadorje.
+
+Gregor Pepel, direktor podjetja Parnad
+
+Rezultati
+Dobro zastavljen plan se je obrestoval
+S pomočjo kampanje smo pridobili 320 kontaktov, ki smo jih še nadalje segmentirali in tako prišli do 166 hladnih kontaktov, 124 mlačnih in 34 vročih kontaktov. Poleg tega pa smo z našimi sporočili dosegli več kot 1 milijon ljudi in več kot 19.500 interakcij.
+
+Dosežene rezultate so opisali takole: »Hladne kontakte še danes nagovarjamo z “newsletterji” in drugimi obvestili. Čeprav ti kontakti niso postali naši ambasadorji, smo z njimi realizirali prodajo, zato so nam pomembni. Z mlačnimi leadi smo tudi realizirali prodajo in pridobili nekaj prodajalcev. Vroči kontakti pa so nas pa sezuli – pridobili smo 10 novih prodajalcev, od katerih jih je po treh letih danes z nami še štiri, ki so postali zelo uspešni v svojem segmentu. Pod črto je torej bila izjemno uspešna kampanja.«
+
+Podjetje Parnad je s kampanjo dosegla in presegla začetno postavljene cilje, v bodoče pa si želi ponovno sodelovati z nami in implementirati podoben sistemski pristop nagovarjanja potencialnih strank tudi za druge komunikacijske cilje.
+
+
+
+Instrumentation Technologies
+Podjetje Instrumentation Technologies z uporabo Microsoft Teams dosega precej višjo produktivnost
+Instrumentation Technologies je slovensko visokotehnološko podjetje z več kot 20-letnimi izkušnjami, ki je danes med vodilnimi podjetji na svetu na področju merilnih instrumentov za diagnostiko pospeševalnih žarkov. Ekipa inženirjev že vrsto let zagotavlja integrirane rešitve za strojno in programsko opremo na obstoječih tehnološko najzahtevnejših in tudi novih vzhajajočih trgih. Njihovi najbolj znani dosežki so visokotehnološki produkti, kot sta Libera in Red Pitaya.
+
+Izziv
+Z rastjo so nastale nove potrebe
+Od ustanovitve podjetja leta 1998 do začetka pospešene rasti leta 2003 so za informacijske rešitve na področju poslovanja, upravljanja zaposlenih in financ skrbeli sami. Z rastjo in razvojem so se njihove potrebe po učinkoviti informacijski infrastrukturi povečale in presegle njihove zmogljivosti. Odločili so se, da se v podjetju posvetijo razvoju svoje osnovne dejavnosti in za vse preostale procese poiščejo izkušene in zanesljive zunanje izvajalce. Iskali so sodobne in fleksibilne rešitve, ki jih je mogoče prilagoditi specifiki področja, v katerem delujejo, ter na enostaven način povezujejo poslovne procese, komunikacijo in dokumentni sistem.
+
+Rešitev
+Od interne informatike do izboljšanja komunikacije ter celovitega vodenja projektov
+Podjetju Instrumentation Technologies smo kot skrbniki celotnega sistema informatike, nakupa, vzdrževanja, posodabljanja računalniške strojne in programske opreme zagotovili tudi prenos celotne informacijske infrastrukture za podporo poslovanju v oblaku. Poleg izvajanja sistemskih storitev, smo v nadaljevanju sodelovanja uvedli poslovni informacijski sistem Microsoft Dynamics 365 Business Central ter sistem za upravljanje odnosov s strankami Microsoft Dynamics 365 CRM in tako po meri oblikovali celovit proces upravljanja strank, ki je precej specifičen za panogo, v kateri podjetje deluje.
+
+Ena ključnih rešitev, ki smo jo implementirali in je znatno pripomogla k boljšemu internemu sodelovanju in komunikaciji, je Microsoft Teams in orodje za dokumentni sistem SharePoint. Obe orodij sta komplementarni in omogočata popolnoma varno in oblačno delovanje, kjer koli se zaposleni nahajajo.
+
+
+Potrebovali smo učinkovito orodje za hitro interno komunikacijo – za takojšne sporočanje in klepetanje. Skype je za takšne stvari preveč okoren, klic pa je preveč agresiven. Želeli smo zagotoviti širšo uporabo klepeta kot vmesne poti med e-pošto, klicem in opravili.
+
+Elvis Janežič, Direktor
+
+Rezultati
+Poenotili smo interno komunikacijo
+Z uvedbo storitve Microsoft Teams smo poenotili interno komunikacijo, ki je prej potekala prek različnih orodij, kot so Skype, e-pošta, WhatsApp in druga, ter posodobili dokumentni sistem, ki deluje kot integrirana rešitev znotraj enega programa z imenom Teams.
+
+Orodje Teams uporabljajo tudi za sodelovanje z nekaterimi strankami. Sledenje komunikaciji in urejanje podatkov strank lahko opravijo na enem mestu z uporabo aplikacije Dynamics 365 CRM znotraj programa Teams, ki je sinhronizirana z že obstoječim sistemom Microsoft Dynamics 365 CRM.
+
+V internem oddelku podjetja Instrumentation Technologies, imenovanem Solutions for Industries, ki se ukvarja s projektnim razvojem instrumentov v specifičnih industrijah, je orodje Microsoft Teams z aplikacijo Planner omogočilo boljši pregled nad kopico projektov, ki vsebujejo številne faze in postopke razvoja. S precej jasnejšim pregledom in sledenjem opravil in nalog preko sistema kartic ali seznama so člani oddelka pridobili preglednejši in hitrejši vpogled v stanje projekta.
+
+Zaključek
+Celovite rešitve so naložba za prihodnost
+Vsako področje, organizacija ali industrija ima svoje specifike in načine dela, ki se lahko razlikujejo od vseh drugih. Celovitost in prilagodljivost rešitve je ključnega pomena pri rasti podjetja v prihodnje, saj z dobrimi temelji informacijskega sistema in rešitev omogočimo lažjo in hitrejšo nadgradnjo ter tako informacijski sistem rase skupaj z organizacijo in ne obratno. Instrumentation Technologies se dobro zaveda pomena urejenega in dobro podkovanega informacijskega sistema, zato redno sledi novostim in izboljšavam na področju programske opreme, ki jim omogočajo brezskrbno in celovito poslovanje.
+
+
+
+
+
+
+IC Elektronika
+Kako smo izboljšali produktivnost zaposlenih z avtomatizacijo spletne trgovine preko ERP sistema
+Študija primera kako smo podjetju IC Elektronika pomagali do boljše učinkovitosti delovnih procesov s prenovo spletne trgovine katera ima vgrajeno direktno sinhronizacijo z ERP produktom Microsoft Dynamics Navision po novem Business Central.
+
+Izziv
+Želja po napredku
+IC Elektronika je izjemno cenjeno in spoštovano podjetje, ki je na tržišču že 31 let in je največji neodvisni distributer elektronskih komponent v Sloveniji. Podjetje je bilo ustanovljeno leta 1989 s sedežem v Ljubljani in kasneje s podružnicama na Hrvaškem in v Srbiji. Odlikuje jih zelo dobro poznavanje njihovih končnih kupcev ter dobri odnosi s partnerji in dobavitelji. Njihova prva skrb so prav kupci in zato si vedno znova prizadevajo izboljšati njihovo zadovoljstvo, predanost in oblikovati kar se da dobro uporabniško izkušnjo na spletu in izven njega.
+
+Spletna trgovina podjetja IC Elektronika vsebuje ogromno različnih izdelkov, ki so smiselno umeščeni v kategorije ter vizualno opremljeni s fotografijami dotičnega izdelka. Sama uporabniška izkušnja na spletni strani omogoča uporabnikom preglednost in jasnost informacij, ki so ključne za kupca, ki želi opraviti spletni nakup ali pa primerjati izdelke med seboj.
+
+Rešitev
+Kar kupec ne opazi je avtomatizem, ki deluje v ozadju spletne trgovine
+Nakup preko spleta je za kupca vedno osebna izkušnja, ki jo kupec vidi skozi svoje oči. Uporabnik oziroma bodoči kupec na spletni strani oceni ali mu spletna stran ponuja dovolj informacij o izdelku ali si lahko izdelek tudi vizualno ogleda ter ali je spletna trgovina zaupanja vredna. Kar kupca v bistvu sploh ne zanima je proces, ki se odvija v ozadju B2C ali B2B spletne trgovine, ko se recimo sproži novo naročilo. Ti procesi so »sladke skrbi« lastnika spletne trgovine saj mora zagotoviti kar se da dobro uporabniško izkušnjo, da se kupec počuti kot kralj in ne občuti morebitnih težav z njegovim opravljenim naročilom.
+
+V konkretnem primeru podjetja IC Elektronika bomo govorili o B2C portalu saj se podjetje preko spleta večinoma fokusira na maloprodajo. 
+
+
+Z Business Solutions sodelujemo že 10 let in ne moremo skriti navdušenja nad njihovo strokovnostjo in podporo pri številnih nadgradnjah in implementacijah sistemskih rešitev. Logična posledica predhodnega uspešnega sodelovanja je bila odločitev o izdelavi spletne trgovine, ki je popolnoma sinhronizirana z ERP sistemom. Zaradi velike raznolikosti naših izdelkov je bil izziv precej velik ampak ga je ekipa BS strokovnjakov opravila z odliko. Če bi se še enkrat odločali, bi gotovo še enkrat za partnerja izbrali Business Solutions. Njihovi nasveti in izvedba so za nas nepogrešljivi.
+
+Barbara Moškon, Pomočnica direktorja
+
+Rezultati
+Avtomatizacija spletne trgovine izboljša vašo interno produktivnost zaposlenih
+Najpomembnejše funkcionalnosti, ki jih pridobimo z uporabo ERP sistema so tiste za katere porabimo največ časa v administrativnem smislu. Področja, ki smo razbremenili z rešitvijo povezljivosti spletne trgovine z ERP sistemom Microsoft v tem konkretnem primeru so:
+
+Prodaja - Prodajalec se več ne ukvarja s številnimi ročnimi zapisi, vpisi podatkov v različne programe ali fizičnega pregleda zaloge, ko pride do naročila izdelka v spletni trgovini. Sedaj ima proces popolnoma avtomatiziran in poenoten v enem programu. Od naročila izdelka pa do samo izdaje in naročilnice dostavni službi.
+Marketing - Služba marketinga ima na dosegu roke vse podatke o prodaji in statistiki v enotnem programu, ki omogoča pregledne informacije in podatke o aktivnostih na spletni trgovini. Upravljanje izdelkov upravlja kar iz ERP sistema kateri je sinhroniziran s spletno trgovino.
+Nabava - Nabavni referent preko celovitega sistema ima točne podatke koliko izdelkov ali materiala je še na zalogi ter zlahka planira nabavo novih komponent ali izdelkov brez ozkih grl. Celovitost programa mu omogoča lažje in učinkovitejše planiranje letnih planov.
+Skladiščenje - Skladiščnik opravlja svoje delo učinkovito in natančno s pomočjo ERP sistema za skladišča in ima tako pregled nad zalogo, izdajo, sledenjem in knjiženjem materiala.
+Za razvoj spletne trgovine IC Elektronike smo uporabili programsko orodje Magento, ki ponuja celovite rešitve izdelane po meri uporabnika in industriji v kateri deluje. Platforma Magento je popolnoma prilagodljiva poslovnim procesom v podjetju in kompatibilna z Microsoft Dynamics NAV - Navision ali prenovljeno različico Business Central.
+
+Kako izgleda primer avtomatiziranega spletnega mesta v povezavi z ERP sistemom:
+
+Nov spletni nakup sproži samodejno izdelavo naročila, ki je popolnoma sinhroniziran z ERP sistemom.
+V ERP sistemu se samodejno kreira prodajni nalog glede na prejeto naročilo kupca.
+Samodejno se oblikuje dobavnica ter sistemsko sporočilo skladiščni službi, da izdelek pripravi na odpremo.
+Pošiljko se stehta preko elektronske tehnice, ki samodejno prepiše težo v sistem. Avtomatsko se izdela in posreduje naročilo za dostavno službo.
+Glede na količino v kupčevem naročilu se zaloga izdelkov samodejno ustrezno zmanjša v ERP sistemu in na spletni trgovini. 
+Integracija Tinx-IT Magento rešitve za upravljanje informacij o izdelku - (angl. Product Information Management – PIM) znotraj Business Central ali Navision programa omogoča upravljanje s podatki, slikami, informacijami, oznakami in cenami na vseh izdelkih v spletni trgovini. Vse na enem mestu.
+
+Tako lahko upravljalec spletne trgovine kar preko ERP sistema uredi opis izdelka, doda sliko ali popravi ceno preko veljavnih cenikov.
+
+Zaključek
+Kaj smo pridobili z avtomatizacijo in poenotenim sistemom
+Razbremenili smo administrativno delo v prodaji in marketingu in tako so lahko zaposleni usmerili energijo v pomembnejše naloge. Pospešili smo pregled nad podatki v spletni trgovini in zmanjšali število napak zaradi ročnega vnosa podatkov v različne sisteme. Omogočili smo višjo efektivnost dela v sami odpremi izdelkov. Zmanjšali smo število reklamacij in skrajšali čas nakupa preko spletne trgovine. Naš ključni cilj, avtomatizirati spletno trgovino in s tem izboljšati efektivnost procesa dela v podjetju je uspel. Podjetje ima več časa za naloge, ki podjetju prinašajo tisto pravo dodano vrednost in s tem tudi zadovoljstvo kupcev in dobaviteljev.
+
+
+
+
+Elektro Gorenjska
+Izboljšan vpogled v poslovanje za slovenskega operaterja prenosnega omrežja
+Elektro Gorenjska, d. d., je podjetje za distribucijo električne energije Zagotavlja dobavo električne energije več kot 87.000 odjemalcem, razpršenih na območju več kot 2.000 km2 v severozahodnem delu Slovenije. Podjetje si stalno prizadeva izboljšati svoje storitve in obenem zmanjšati stroške ter povečati učinkovitost poslovanja. S tem ciljem so leta 2014 začeli s projektom zamenjave obstoječega poslovno-informacijskega sistema. V sodelovanju s podjetjem Business Solutions so vpeljali informacijsko rešitev Microsoft Dynamics NAV 2013 R2, ki z določenimi prilagoditvami za specifiko njihove panoge danes zagotavlja celovito in centralizirano podporo poslovanju. Podjetje je z vpeljavo rešitve Microsoft Dynamics NAV zmanjšalo stroške vzdrževanja informacijskega sistema ter izboljšalo svojo odzivnost in prilagodljivost, saj lahko po novem bistveno hitreje zagotovijo informacijsko podporo morebitnim spremembam v poslovnih procesih.
+
+Izziv
+Želja po napredku
+Leta 2014 je podjetje Elektro Gorenjska doseglo 89,9 milijona EUR prihodkov in 5,5 milijona čistega dobička. Cilj podjetja je postati najboljši prodajalec energije v Sloveniji, ki kupca postavlja v središče poslovanja ter obenem optimizira svoje delovanje za učinkovito zagotavljanje storitev. V podjetju si pri svojem poslovanju stalno prizadevajo znižati stroške in zagotoviti učinkovitejše poslovanje. S tem ciljem so leta 2014 zagnali projekt zamenjave obstoječega informacijskega sistema, ki je zaradi zastarelosti in distribuiranosti pomenil visoke stroške vzdrževanja. »Prav tako smo želeli zagotoviti centralizacijo informacij v podjetju ter vpeljati informacijsko rešitev, ki bi bila prilagojena poslovnim procesom," je pojasnil Dominik Ovniček, Vodja službe za informatiko.
+
+Ti glavni cilji so nas vodili pri odločitvi za novo rešitev, ki smo jo izbirali s pomočjo javnega razpisa.« Elektro Gorenjska je obvezan k izbiri rešitev preko javnega razpisa, preko katerega so na podlagi predloženih ponudb izbrali podjetje Business Solutions d.o.o. s svetovno uveljavljeno poslovno-informacijsko rešitvijo Microsoft Dynamics NAV.
+
+Rešitev
+Prilagoditev sistema tipu poslovanja
+V Elektro Gorenjska so ocenili, da Microsoft Dynamics NAV nudi ustrezno skladnost s Slovenskimi računovodskimi standardi (ponudnik zagotavlja slovensko in širšo lokalizacijo že več kot 15 let) in specifične zahteve elektrodistribucijskega podjetja. Prav tako jih je prepričala možnost hitre vpeljave rešitve. V sodelovanju s podjetje Business Solutions, ki je rešitev tudi lokaliziralo, so vpeljali različico Dynamics NAC 2013R2 za 70 sočasnih uporabnikov. Rešitev je nameščena na lastnih strežnški infrastrukturi Elektro Gorenjska. Podatkovna zbirka za poslovno-informacijski sistem je strežnik Microsoft SQL Server. Projekt implementacije rešitve se je pričel junija 2014, v produkcijsko okolje pa je bila rešitev predana že 1. januarja 2015. Končna rešitev združuje tako privzete programske rešitve kot tudi specifične rešitve podjetja Business Solutions, ki odražajo potrebe elektrodistribucijskega podjetja.
+
+»Pripraviti smo morali več prilagoditev za specifične zahteve podjetje,« je pojasnil Aljoša Gruden, Business Solutions. »Razvili smo namenske module za tehnične podatke in gradbeno dejavnost. Prav tako smo vzpostavili vodenje bilanc po organizacijskih enotah ter podprli posebnosti pri vodenju osnovnih sredstev.«
+
+
+Z novo rešitvijo lahko relativno hitro prilagodimo informacijsko podporo, ko pride do spremembe v poslovnem procesu. Prav tako z informacijsko rešitvijo lažje vplivamo na spremembe v poslovnih procesih, kar nam zagotavlja boljši nadzor in več prilagodljivosti.
+
+Mag. Dominik Ovniček, Vodja službe za informatiko
+
+Rezultati
+Višja učinkovitost poslovanja
+Elektro Gorenjska tako koristi številne prednosti, med katerimi so tako nižji stroški kot višja učinkovitost poslovanja. »Ob nekoliko višjih stroških, potrebnih za zagotovitev podpore vsem specifičnim zahtevam, pričakujemo, da se bo naložba v poslovno-informacijski sistem povrnila v dveh letih,« je pojasnil Ovniček. Podjetje je z zamenjavo informacijskega sistema z rešitvijo Microsoft Dynamics NAV zagotovili enako informacijsko podporo vsem poslovnim postopkom, obenem pa so določeni postopki sedaj bolj enostavni. Pomembno prednost predstavlja integracija z dokumentnim sistemom, ki pomeni višjo storilnost in izboljšano odzivnost za podjetje. V novem informacijskem sistemu je bilo potrebno narediti tudi večje število integracij z zalednimi sistemi.
+
+Tako smo Microsoft Dynamics NAV uspešno integrirali z dokumentnim sistemom, sistemom za obračun električne energije, sistemom za življenski cikel odjemalca ter GIS sistemom za prikaz podatkov o električnem omrežju. Microsoft Dynamics NAV se je izkazal kot zelo dobro povezljiva aplikacija z ‘web services’ in C# tehnologijo. Microsoft Dynamics NAV je tako omogočil centralizacijo poslovne rešitve za celotno podjetje in omogoča boljšo prilagodljivost poslovanja. »Z novo rešitvijo lahko relativno hitro prilagodimo informacijsko podporo, ko pride do spremembe v poslovnem procesu,« je pojasnil Ovniček. »Prav tako z informacijsko rešitvijo lažje vplivamo na spremembe v poslovnih procesih, kar nam zagotavlja boljši nadzor in več prilagodljivosti.«
+
+Zaključek
+Kaj smo pridobili s poenotenim sistemom
+V prihodnosti namerava Elektro Gorenjska dodati integracijo rešitve Microsoft Dynamics NAV z zunanjimi sistemi ter izboljšati avtomatizacijo in optimizacijo izvajanja poslovnih procesov v podjetju. Prav tako načrtujejo tudi razvoj dodatnih modulov za pokrivanje funkcionalnosti, za katere sedaj še skrbijo interno razvite aplikacije.
+
+
+
+
+Komunala Nova Gorica
+Vse dejavnosti pokrite z eno celovito rešitvijo Microsoft Dynamics NAV za boljše poslovanje
+Javna gospodarska podjetja, kot je Komunala Nova Gorica d.d., morajo slediti razvoju digitalizacije zaradi obsežnih zahtev po poročanju, tako zakonskih kot tudi lastnikov, zaradi različnih dejavnosti in zato uvajajo digitalizacijo, saj želijo za opravila z nizko dodano vrednostjo porabiti čim manj časa in denarja ter hkrati s svojo dejavnostjo čim manj obremenjevati okolje, opolnomočiti logistične poti in na ta način dvigniti nivo storitev, ki jih opravljajo.
+
+Izziv
+Sledenje napredku in razvoju v digitalizaciji
+Večino komunalnih podjetji rešujejo poslovno informacijske rešitve po metodi “vrtičkarstva”. Se pravi, vsaka dejavnost uporablja svoj programski paket, kar privede do večjega števila poslovno informacijskih rešitev, s katerimi upravljajo različne osebe, hkrati pa se morajo ti sistemi povezovati. In tukaj nastane problem. Ta se ne poraja samo v tehničnem delu, ampak tudi v vsebinskem ter z njima povezanem človeškem faktorju. Zaposleni se morajo znajti pri delu z različnimi programskimi paketi, prihaja do večkratnih vnosov in prenosov podatkov, nepovezanosti različnih informacijskih okolij.
+
+Ko pa govorimo o potrebnih dodelavah programske opreme, gre lahko vsaka dodelava v svojo smer brez kakršnekoli povezanosti, saj je zaradi kompleksnosti povezovanja zaradi nadgradnje posameznega ali celotnega sistema le to praktično nemogoče izvesti. 
+
+Razlogi komunalnih podjetji, da so prišli do te stopnje, ko morajo dejansko imeti en združen informacijski sistem, so v zahtevah zakonodaje, računovodskih standardov, poročanja navzven mnogim deležnikom (lastnikom, regulatorjem oz. inšpekcijam). Dejavnosti Komunale Nova Gorica d.d. zajemajo ravnanje s komunalnimi odpadki, čiščenje javnih površin, urejanje lokalnih cest, javnih poti in površin, pokopališčno dejavnosti s pogrebnimi storitvami, mizarstvo, cvetličarstvo in gradbeno dejavnost.
+
+Rešitev
+Prilagoditev sistema tipu poslovanja
+Skozi dobro desetletje sodelovanja smo poslovanje digitalizirali postopoma. Najprej smo pokrili vse osnovne poslovne funkcije ter napredovali z informatizacijo specifičnih dejavnosti oz. storitev. Tako smo dosegli:
+
+Informatizacijo vseh poslovnih procesov v vseh dejavnostih
+Centralizacijo podatkov (enotni sistem namesto več prejšnjih)
+Celovitost in varnost (varnost podatkov z arhiviranjem)
+Poenostavitev procesov z racionalizacijo
+Izogibanje vnašanju ponavljajočih vnosov
+Elektronsko vodenje evidenc (spremljanje logističnih poti in planiranje)
+Avtomatsko izračunavanje rezultatov
+Kroženje podatkov brez razhajanj (od izvora do glavne knjige)
+Pospešitev pretoka podatkov (Potrjevanje dokumentov in preglednost z določenimi parametri pravil, avtomatski obračuni in preglednost,…)
+Preglednost izvajanja operativnih del (optimizacija nad koordinacijo delavcev in delovnih strojev in tako
+izogib ozkim grlom)
+Marjan Srebrnič, višji svetovalec za informacijske sisteme, ki v Business Solutions skrbi za naročnika razloži: »Skozi gradnjo in nadgrajevanje Microsoft Dynamics NAV (včasih poznan kot Navision, letos pa preimenovan v Microsoft Dynamics 365 Business Central) smo z lastno rešitvijo AllForUtility, ki je primarno namenjena panogi distribuiranja energentov, ima pa tudi različico za podporo vodenja procesov v komunalni dejavnosti, dosegli polno informacijsko podporo, hkrati pa nam je rešitev omogočila nadaljnje širitve, kot je spremljanje izvajanja javnih naročil, elektronsko poročanje ARSO in številnih drugih, ki jih še načrtujemo« uvedbo.
+
+
+Težave so nas primorale v spremembo. Izkazalo se je, da je na trgu na voljo več možnosti, več programskih rešitev, vendar večina ni ponujala enega programskega paketa. Tista, ki je pokrila vso našo dejavnost z enim programskim paketom, je bila ponudba podjetja Business Solutions, saj s svetovno uveljavljeno poslovno-informacijsko rešitvijo Navision lahko pokrijemo vse naše dejavnosti z eno rešitvijo.
+
+
+Boštjan Roldo, Vodja analitike
+
+Zaključek
+Bogata paleta storitev
+Podjetje Komunala Nova Gorica d.d. deluje na območju šestih občin, ki so nastale iz bivše Mestne občine Nova Gorica. Aktivnosti samega podjetja so usmerjene k lepšemu videzu mesta in njene okolice ter k boljšemu počutju občanov in občank. Slednje močno pripomore k dejstvu, da je sloves občine povezan s pojmom čistega in urejenega mesta. Tudi v poslanstvu družbe je moč razbrati enaka prizadevanja in to lahko opolnomočijo z uporabo rešitve, ki smo jo implementirali . Zaposleni pravijo »Naša osnovna naloga je omogočiti ljudem zdravo, čisto in kakovostno življenje. Uresničujemo jo z bogato paleto naših storitev na področju ravnanja z odpadki, vzdrževanja in urejanja javnih površin in objektov, ter ostalih dejavnosti in produkt All For Utillity, ki služi kot podaljšana roka Microsoft Dynamics Navision lahko to dosegamo in se ne obremenjujemo s poslovno informacijskimi sistemi«
+
+
+
+
+
+ISO Certifikati
+Z uspešno pridobljenima certifikatoma ISO 9001:2015 in ISO/IEC 27001:2022 je podjetje Business Solutions d.o.o. potrdilo skladnost svojih procesov z najvišjimi mednarodnimi standardi. Certifikat ISO 9001:2015 potrjuje, da smo vzpostavili in vzdržujemo učinkovit sistem vodenja kakovosti, ki podpira strukturiranost, procesno doslednost in kontinuirano izboljševanje, z jasnim poudarkom na zadovoljstvu strank in partnerjev. Certifikat ISO/IEC 27001:2022 pa odraža naš sistematičen pristop k varovanju informacij – od ocene tveganj in obvladovanja incidentov do definiranja varnostnih politik in kontrolnih mehanizmov za zaščito podatkov ter digitalnih virov.
+
+Certifikata predstavljata nadgradnjo obstoječih procesov in dokazujeta, da podjetje deluje skladno z najvišjimi mednarodnimi standardi. Vpeljava teh sistemov ni zgolj formalnost, temveč strateška odločitev, ki neposredno vpliva na kakovost naših storitev, obvladovanje tveganj in dolgoročno konkurenčnost na trgu.
+
+Certifikacijski postopek je izvedlo priznano podjetje DQS iz Zagreba, ki je v okviru presoje pregledalo tako dokumentacijo kot tudi konkretne prakse delovanja. Ugotovitve potrjujejo, da imamo vzpostavljene sisteme, ki so ne le skladni z zahtevami standardov, temveč tudi primerni za dolgoročno vzdrževanje in razvoj.
+
+
+
+
+CERTIFIKAT
+S tem potrjujemo, da je podjetje
+BUSINESS SOLUTIONS d.o.o.
+Velika pot 15
+5250 Solkan
+Slovenia
+uvedlo in vzdržuje sistem vodenja kakovosti.
+Področje veljavnosti:
+Načrtovanje, razvoj, implementacija, prilagajanje in podpora ERP sistemov ter
+razvoj programskih rešitev in svetovanje na področju poslovno-informacijskih tehnologij.
+Z izvedbo presoje, dokumentirana s poročilom, je potrjena skladnost
+sistemov vodenja v skladu s standardom:
+ISO 9001 : 2015
+Registracijska številka certifikata
+Veljavno od
+Veljavno do
+Datum certifikacije
+30600319 QM15
+2025-07-11
+2028-07-10
+2025-07-11
+
+DQS GmbH
+Guido Eggers
+Director 
+
+Accredited Body: DQS GmbH, August-Schanz-Straße 21, 60433 Frankfurt am Main, Germany
+Administrative Office: DQS Zagreb d.o.o., Avenija Većeslava Holjevca 23, 10010 Zagreb, Republic of Croatia
+The validity of the certification can only be verified by the QR-code.
+
+
+
+
+
+
+
+
+CERTIFIKAT
+S tem potrjujemo, da je podjetje 
+POSLOVNE REŠITVE d.o.o.
+Velika pot 15 
+5250 Solkan 
+Slovenija
+uvedlo in vzdržuje sistem vodenja informacijske varnosti. 
+Področje veljavnosti: 
+Načrtovanje, razvoj, implementacija, prilagajanje in podpora ERP sistemov ter razvoj 
+programskih rešitev in svetovanje na področju poslovno-informacijskih tehnologij. 
+Izjava o uporabnosti: Version 1 - 1.6.2025. 
+Z izvedbo presoje, dokumentirana s poročilom, je potrjena skladnost 
+sistemov vodenja v skladu s standardom: 
+ISO/IEC 27001: 2022
+Registracijska številka certifikata  30600319 ISMS22
+Veljavno od  15. 7. 2025
+Veljavno do  14. 7. 2028
+Datum certificiranja  15. 7. 2025
+DQS GmbH
+Guido Eggers
+Direktor
+Akreditirani organ: DQS GmbH, August-Schanz-Straße 21, 60433 Frankfurt na Majni, Nemčija Upravna
+pisarna: DQS Holding GmbH, Konrad-Adenauer-Allee 8-10, 61118 Bad Vilbel, Nemčija Veljavnost certifikata je
+mogoče preveriti le s kodo QR.
+
