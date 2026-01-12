@@ -454,12 +454,12 @@ class SocialWaveModel:
         return model
 
 
-model = SocialWaveModel(n_agents=10000, influence=0.45,
+model = SocialWaveModel(n_agents=1000, influence=0.45,
                         damping=0.02, noise=0.02, connections=5, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
-# history = model.run(steps=10800)
+history = model.run(steps=10800)
 
 
 # # to load model and/or visualize uncomment rows bellow

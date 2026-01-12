@@ -212,3 +212,12 @@ __marimo__/
 
 # vector db
 *.faiss
+
+# result.txt
+/abm/result.txt
+
+# run_abm.sh
+/abm/run_abm.sh
+
+# swm like
+/abm/swm*
