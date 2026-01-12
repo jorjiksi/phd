@@ -74,9 +74,9 @@ class SocialWaveModel:
                     f.write(f"{key}: {value}\n")
 
         # initial moods
-        # self.moods = [np.random.uniform(-0.2, 0.2, n_agents)]
         np.random.seed(42)
-        self.moods = [np.random.normal(-1, 1, n_agents)]
+        self.moods = [np.random.uniform(-0.2, 0.2, n_agents)]
+        # self.moods = [np.random.normal(-1, 1, n_agents)] - for cases with a predetermined trend
         # list of edge lists per step (saved on disk)
         self.edge_lists = []
         # full history of average moods
@@ -122,7 +122,8 @@ class SocialWaveModel:
             delta = self.influence * \
                 (neighbor_avg - self.moods[step_number][i])
             new_moods[i] += delta - self.damping * \
-                self.moods[step_number][i] + np.random.normal(0, self.noise)
+                self.moods[step_number][i] + \
+                np.random.normal(0, self.noise)
 
         self.moods.append(new_moods)
         self.history.append(np.mean(new_moods))
@@ -453,12 +454,12 @@ class SocialWaveModel:
         return model
 
 
-model = SocialWaveModel(n_agents=10, influence=0.25,
-                        damping=0.005, noise=0.2, connections=2, save_interval=500)
+model = SocialWaveModel(n_agents=10000, influence=0.45,
+                        damping=0.02, noise=0.02, connections=5, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
-history = model.run(steps=10800)
+# history = model.run(steps=10800)
 
 
 # # to load model and/or visualize uncomment rows bellow
@@ -470,12 +471,19 @@ history = model.run(steps=10800)
 #               'connections': 2,
 #               'creat_date': datetime(2025, 12, 27, 21, 44, 5, 899429)}
 
+# swm_params = {'n_agents': 5000,
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 5,
+#               'creat_date': datetime(2026, 1, 12, 0, 47, 15, 185192)}
+
 #  load data
 # model = model.load_from_disk('swm_', swm_params)
 
 # # Plotting a time series
-model.plot_time_series(window=120, save_chart=True)
-model.time_framed_series()
+# model.plot_time_series(window=7, save_chart=True)
+# model.time_framed_series()
 
 # # Creating 3D animation (using only the latest saved data from RAM)
-model.create_3d_dynamic_network()
+# model.create_3d_dynamic_network()
