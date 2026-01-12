@@ -28,7 +28,7 @@ class LocalLLM:
             prompt,
             max_tokens=self.max_tokens,
             stop=[
-                "\nTOOL:",   # ← остановка перед повтором
+                "\nTOOL:",   # ← stop phrases
                 "\nTHOUGHT:",
                 "\nDONE:"
             ]

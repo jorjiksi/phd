@@ -9,7 +9,7 @@ from config import ModelConfig, AgentConfig
 from llm import LocalLLM
 from agent import Agent
 
-MODEL_PATH = "/home/oleg/agent_rag_bs/Qwen3-Coder-30B-A3B-Instruct-GGUF/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
+MODEL_PATH = "/media/oleg/D(ubuntu)/do_not_touch/rag/Qwen3-Coder-30B-A3B-Instruct-GGUF/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
 
 
 def main():
@@ -55,6 +55,9 @@ if __name__ == "__main__":
 
 
 # Let's create a python code for multyplication table
+# show all files in current folder
 # se cicles and print nice ultiplication table
 # What do you know about Business Solutions? Answer in no more than two sentences.
-# use python to find what is the weather now in Ljubljana
+# how many files does in current folder?
+# check first page of Business Solutions company in Slovenia
+# What do you know about Business Solutions company in Slovenia? use python to pull data from their web site
