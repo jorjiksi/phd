@@ -50,12 +50,24 @@ class SocialWaveModel:
         save_dir: directory for storing data
         """
         self.n = n_agents
+        self.delay = 1
         self.influence = influence
         self.damping = damping
         self.noise = noise
         self.connections = connections
         self.save_dir = save_dir
         self.new_model = new_model
+
+        # individual sensitivity to the environment
+        self.sensitivity = np.random.lognormal(
+            mean=0.0, sigma=0.3, size=self.n)
+
+        # individual damping
+        self.agent_damping = np.random.uniform(
+            0.5 * self.damping,
+            1.5 * self.damping,
+            self.n
+        )
 
         self.swm_params = {'n_agents': self.n,
                            'influence': self.influence,
@@ -104,7 +116,12 @@ class SocialWaveModel:
         step_number : int
             Index of the current simulation step.
         """
-        new_moods = np.copy(self.moods[step_number])
+        # delayed moods (если истории мало — берём текущее)
+        if step_number >= self.delay:
+            delayed_moods = np.array(self.moods[step_number - self.delay])
+        else:
+            delayed_moods = np.array(self.moods[step_number])
+        new_moods = np.copy(delayed_moods)
         edge_list_t = []
 
         for i in range(self.n):
@@ -118,13 +135,21 @@ class SocialWaveModel:
                 edge_list_t.append((i, nb))
 
             # update mood
-            neighbor_avg = self.moods[step_number][neighbors].mean()
-            delta = self.influence * \
-                (neighbor_avg - self.moods[step_number][i])
-            new_moods[i] += delta - self.damping * \
-                self.moods[step_number][i] + \
-                np.random.normal(0, self.noise)
-
+            neighbor_avg = delayed_moods[neighbors].mean()
+            # delta = self.influence * \
+            #     (neighbor_avg - self.moods[step_number][i])
+            delta = self.influence * np.tanh(
+                self.sensitivity[i] *
+                (neighbor_avg - delayed_moods[i])
+            )
+            # new_moods[i] += delta - self.damping * \
+            #     self.moods[step_number][i] + \
+            #     np.random.normal(0, self.noise)
+            new_moods[i] += (delta
+                             - self.agent_damping[i] *
+                             delayed_moods[i]
+                             + np.random.normal(0, self.noise)
+                             )
         self.moods.append(new_moods)
         self.history.append(np.mean(new_moods))
         self.edge_lists.append(edge_list_t)
@@ -235,7 +260,7 @@ class SocialWaveModel:
         return G
 
     # ---------------------- Plot time series ----------------------
-    def plot_time_series(self, df=None,  window=21, time_frame='',  save_chart=False, filename="mood_chart"):
+    def plot_time_series(self,  df=None,  window=21, time_frame='',  save_chart=False, filename="mood_chart"):
         """
         Save simulation data for a given step interval to disk.
 
@@ -262,7 +287,8 @@ class SocialWaveModel:
         if time_frame == '':
             plt.plot(self.history, alpha=0.4, label="Raw mood")
         plt.plot(smooth, color='red', linewidth=2, label="Smoothed trend")
-        plt.title(f"Evolution of collective mood {time_frame}")
+        plt.title(
+            f"Evolution of collective mood {time_frame} for {self.n} agents")
         plt.xlabel("Time step")
         plt.ylabel("Average mood")
         plt.legend()
@@ -454,36 +480,51 @@ class SocialWaveModel:
         return model
 
 
-model = SocialWaveModel(n_agents=1000, influence=0.45,
-                        damping=0.02, noise=0.02, connections=5, save_interval=1000)
+model = SocialWaveModel(n_agents=10, influence=0.6,
+                        damping=0.02, noise=0.02, connections=2, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
-history = model.run(steps=10800)
+# history = model.run(steps=10800)
 
 
 # # to load model and/or visualize uncomment rows bellow
 # # saved model parameters
 # swm_params = {'n_agents': 10,
-#               'influence': 0.25,
-#               'damping': 0.005,
-#               'noise': 0.2,
-#               'connections': 2,
-#               'creat_date': datetime(2025, 12, 27, 21, 44, 5, 899429)}
-
-# swm_params = {'n_agents': 5000,
 #               'influence': 0.45,
 #               'damping': 0.02,
 #               'noise': 0.02,
 #               'connections': 5,
-#               'creat_date': datetime(2026, 1, 12, 0, 47, 15, 185192)}
+#               'creat_date': datetime(2026, 1, 12, 23, 49, 54, 861448)}
+
+swm_params = {'n_agents': 100,
+              'influence': 0.45,
+              'damping': 0.02,
+              'noise': 0.02,
+              'connections': 5,
+              'creat_date': datetime(2026, 1, 12, 23, 49, 37, 385874)}
+
+
+# swm_params = {'n_agents': 1000,
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 5,
+#               'creat_date': datetime(2026, 1, 12, 22, 55, 17, 857993)}
+
+# swm_params = {'n_agents': 10000,
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 5,
+#               'creat_date': datetime(2026, 1, 12, 23, 46, 20, 197166)}
 
 #  load data
-# model = model.load_from_disk('swm_', swm_params)
+model = model.load_from_disk('swm_', swm_params)
 
 # # Plotting a time series
 # model.plot_time_series(window=7, save_chart=True)
 # model.time_framed_series()
 
 # # Creating 3D animation (using only the latest saved data from RAM)
-# model.create_3d_dynamic_network()
+model.create_3d_dynamic_network()
