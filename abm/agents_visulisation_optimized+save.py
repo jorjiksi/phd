@@ -49,25 +49,23 @@ class SocialWaveModel:
         save_interval: how often to save edge lists and moods to disk
         save_dir: directory for storing data
         """
+        import networkx as nx
+
         self.n = n_agents
-        self.delay = 1
+
+        # параметры сети
+        k = 6              # среднее число соседей каждого узла
+        p = 0.1            # вероятность «переподключения» (rewiring)
+
+        # строим Small-World граф один раз
+        self.graph = nx.watts_strogatz_graph(self.n, k, p)
+
         self.influence = influence
         self.damping = damping
         self.noise = noise
         self.connections = connections
         self.save_dir = save_dir
         self.new_model = new_model
-
-        # individual sensitivity to the environment
-        self.sensitivity = np.random.lognormal(
-            mean=0.0, sigma=0.3, size=self.n)
-
-        # individual damping
-        self.agent_damping = np.random.uniform(
-            0.5 * self.damping,
-            1.5 * self.damping,
-            self.n
-        )
 
         self.swm_params = {'n_agents': self.n,
                            'influence': self.influence,
@@ -116,40 +114,26 @@ class SocialWaveModel:
         step_number : int
             Index of the current simulation step.
         """
-        # delayed moods (если истории мало — берём текущее)
-        if step_number >= self.delay:
-            delayed_moods = np.array(self.moods[step_number - self.delay])
-        else:
-            delayed_moods = np.array(self.moods[step_number])
-        new_moods = np.copy(delayed_moods)
+        new_moods = np.copy(self.moods[step_number])
         edge_list_t = []
 
         for i in range(self.n):
             # choose random neighbors
-            possible = np.delete(np.arange(self.n), i)
-            neighbors = np.random.choice(
-                possible, self.connections, replace=False)
+            neighbors = list(self.graph.neighbors(i))
 
             # add undirected edges
             for nb in neighbors:
                 edge_list_t.append((i, nb))
 
             # update mood
-            neighbor_avg = delayed_moods[neighbors].mean()
-            # delta = self.influence * \
-            #     (neighbor_avg - self.moods[step_number][i])
-            delta = self.influence * np.tanh(
-                self.sensitivity[i] *
-                (neighbor_avg - delayed_moods[i])
-            )
-            # new_moods[i] += delta - self.damping * \
-            #     self.moods[step_number][i] + \
-            #     np.random.normal(0, self.noise)
-            new_moods[i] += (delta
-                             - self.agent_damping[i] *
-                             delayed_moods[i]
-                             + np.random.normal(0, self.noise)
-                             )
+            neighbor_avg = self.moods[step_number][neighbors].mean()
+            delta = self.influence * \
+                (neighbor_avg - self.moods[step_number][i])
+
+            new_moods[i] += delta - self.damping * \
+                self.moods[step_number][i] + \
+                np.random.normal(0, self.noise)
+
         self.moods.append(new_moods)
         self.history.append(np.mean(new_moods))
         self.edge_lists.append(edge_list_t)
@@ -441,6 +425,19 @@ class SocialWaveModel:
         )
         fig.show()
 
+    def plot_social_network(self):
+
+        # рисуем граф
+        pos = nx.spring_layout(self.graph, seed=42)
+        plt.figure(figsize=(10, 10))
+        nx.draw(self.graph, pos,
+                node_size=50,
+                node_color="skyblue",
+                edge_color="gray",
+                linewidths=0.5)
+        plt.title("Small-World Social Network")
+        plt.show()
+
     # ---------------------- Load full or partial saved data ----------------------
     @staticmethod
     def load_from_disk(save_dir, model_params):
@@ -480,12 +477,12 @@ class SocialWaveModel:
         return model
 
 
-model = SocialWaveModel(n_agents=10, influence=0.6,
-                        damping=0.02, noise=0.02, connections=2, save_interval=1000)
+model = SocialWaveModel(n_agents=100, influence=0.45,
+                        damping=0.02, noise=0.02, connections=10, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
-# history = model.run(steps=10800)
+history = model.run(steps=10800)
 
 
 # # to load model and/or visualize uncomment rows bellow
@@ -497,12 +494,12 @@ model = SocialWaveModel(n_agents=10, influence=0.6,
 #               'connections': 5,
 #               'creat_date': datetime(2026, 1, 12, 23, 49, 54, 861448)}
 
-swm_params = {'n_agents': 100,
-              'influence': 0.45,
-              'damping': 0.02,
-              'noise': 0.02,
-              'connections': 5,
-              'creat_date': datetime(2026, 1, 12, 23, 49, 37, 385874)}
+# swm_params = {'n_agents': 100,
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 5,
+#               'creat_date': datetime(2026, 1, 12, 23, 49, 37, 385874)}
 
 
 # swm_params = {'n_agents': 1000,
@@ -520,11 +517,12 @@ swm_params = {'n_agents': 100,
 #               'creat_date': datetime(2026, 1, 12, 23, 46, 20, 197166)}
 
 #  load data
-model = model.load_from_disk('swm_', swm_params)
+# model = model.load_from_disk('swm_', swm_params)
 
 # # Plotting a time series
-# model.plot_time_series(window=7, save_chart=True)
+model.plot_time_series(window=7, save_chart=True)
 # model.time_framed_series()
 
 # # Creating 3D animation (using only the latest saved data from RAM)
-model.create_3d_dynamic_network()
+# model.create_3d_dynamic_network()
+model.plot_social_network()
