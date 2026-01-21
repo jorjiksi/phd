@@ -54,11 +54,7 @@ class SocialWaveModel:
         self.n = n_agents
 
         # параметры сети
-        k = 6              # среднее число соседей каждого узла
         p = 0.1            # вероятность «переподключения» (rewiring)
-
-        # строим Small-World граф один раз
-        self.graph = nx.watts_strogatz_graph(self.n, k, p)
 
         self.influence = influence
         self.damping = damping
@@ -66,6 +62,12 @@ class SocialWaveModel:
         self.connections = connections
         self.save_dir = save_dir
         self.new_model = new_model
+
+        self.updated = 0
+
+        # строим Small-World граф один раз
+        self.graph = nx.connected_watts_strogatz_graph(
+            self.n, self.connections, p, tries=100)
 
         self.swm_params = {'n_agents': self.n,
                            'influence': self.influence,
@@ -83,9 +85,12 @@ class SocialWaveModel:
                 for key, value in self.swm_params.items():
                     f.write(f"{key}: {value}\n")
 
+            with open(f"{self.save_dir}/static_graph.pkl", "wb") as f:
+                pickle.dump(self.graph, f, protocol=pickle.HIGHEST_PROTOCOL)
+
         # initial moods
         np.random.seed(42)
-        self.moods = [np.random.uniform(-0.2, 0.2, n_agents)]
+        self.moods = [np.random.uniform(-0.2, 0.2, self.n)]
         # self.moods = [np.random.normal(-1, 1, n_agents)] - for cases with a predetermined trend
         # list of edge lists per step (saved on disk)
         self.edge_lists = []
@@ -126,13 +131,19 @@ class SocialWaveModel:
                 edge_list_t.append((i, nb))
 
             # update mood
-            neighbor_avg = self.moods[step_number][neighbors].mean()
-            delta = self.influence * \
-                (neighbor_avg - self.moods[step_number][i])
+            noise = np.random.normal(0, self.noise)
+            if np.random.normal(0, 1)*10 < 1.4:
+                neighbor_avg = self.moods[step_number][neighbors].mean()
+                delta = self.influence * \
+                    (neighbor_avg - self.moods[step_number][i])
+                self.updated += 1
+            else:
+                delta = self.damping * \
+                    self.moods[step_number][i] * 2 - noise
 
             new_moods[i] += delta - self.damping * \
                 self.moods[step_number][i] + \
-                np.random.normal(0, self.noise)
+                noise
 
         self.moods.append(new_moods)
         self.history.append(np.mean(new_moods))
@@ -141,7 +152,8 @@ class SocialWaveModel:
         # save periodically
         if (((step_number + 1) % self.save_interval == 0)
                 or (step_number + 1 == self.steps)):
-
+            print(f"updated {round(self.updated/(self.n*1000)*100,2)}")
+            self.updated = 0
             self._save_step(step_number + 1, self.edge_lists)
 
             # keep in-memory edge list for last interval
@@ -211,11 +223,6 @@ class SocialWaveModel:
         edge_list_t : list of list of tuple
             Edge lists accumulated since the last save operation.
         """
-        # save edge_list
-        fname_edges = os.path.join(
-            self.save_dir, f"edges_step{step_number}.pkl.gz")
-        with gzip.open(fname_edges, "wb") as f:
-            pickle.dump(edge_list_t, f, protocol=5)
 
         # save moods incrementally
         fname_moods = os.path.join(self.save_dir, "moods.npy")
@@ -224,26 +231,8 @@ class SocialWaveModel:
 
         print(f"Saved step {step_number}")
 
-    # ---------------------- Get graph ----------------------
-    def get_graph(self, step_number):
-        """
-        Return a NetworkX Graph object for given step.
-        Loads edge list from disk if saved, otherwise uses last in-memory.
-        """
-        fname_edges = os.path.join(
-            self.save_dir, f"edges_step{step_number}.pkl.gz")
-        if os.path.exists(fname_edges):
-            with gzip.open(fname_edges, "rb") as f:
-                edge_list_t = pickle.load(f)
-        else:
-            edge_list_t = self.edge_lists
-
-        G = nx.Graph()
-        G.add_nodes_from(range(self.n))
-        G.add_edges_from(edge_list_t)
-        return G
-
     # ---------------------- Plot time series ----------------------
+
     def plot_time_series(self,  df=None,  window=21, time_frame='',  save_chart=False, filename="mood_chart"):
         """
         Save simulation data for a given step interval to disk.
@@ -465,20 +454,21 @@ class SocialWaveModel:
         full_path = os.getcwd()
         save_dir_path = full_path + f'/{save_dir}' + f'{model_params}'
         moods_on_disk = np.load(os.path.join(save_dir_path, "moods.npy"))
-        edge_files = sorted([f for f in os.listdir(save_dir_path) if f.startswith(
-            "edges_step") and f.endswith(".pkl.gz")])
+        with open(f"{save_dir_path}/static_graph.pkl", "rb") as f:
+            graph = pickle.load(f)
+
         n_agents = moods_on_disk.shape[1]
 
         model = SocialWaveModel(
             n_agents=n_agents, save_dir=save_dir_path, new_model=False)
+        model.graph = graph
         model.moods = [moods_on_disk[i] for i in range(moods_on_disk.shape[0])]
         model.history = [m.mean() for m in model.moods]
-        # edge_lists will be loaded step by step through get_graph()
         return model
 
 
-model = SocialWaveModel(n_agents=100, influence=0.45,
-                        damping=0.02, noise=0.02, connections=10, save_interval=1000)
+model = SocialWaveModel(n_agents=10, influence=0.45,
+                        damping=0.02, noise=0.02, connections=4, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
@@ -516,7 +506,16 @@ history = model.run(steps=10800)
 #               'connections': 5,
 #               'creat_date': datetime(2026, 1, 12, 23, 46, 20, 197166)}
 
+# swm_params = {'n_agents': 100,
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 4,
+#               'creat_date': datetime(2026, 1, 21, 20, 2, 51, 473891)}
+
+
 #  load data
+# model = SocialWaveModel(new_model=False)
 # model = model.load_from_disk('swm_', swm_params)
 
 # # Plotting a time series
