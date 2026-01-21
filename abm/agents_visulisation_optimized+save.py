@@ -62,12 +62,14 @@ class SocialWaveModel:
         self.connections = connections
         self.save_dir = save_dir
         self.new_model = new_model
-
-        self.updated = 0
+        self.threshold = 3
 
         # строим Small-World граф один раз
         self.graph = nx.connected_watts_strogatz_graph(
             self.n, self.connections, p, tries=100)
+
+        # self.active_agents = set(np.random.randint(1, self.n + 1, 3))
+        self.active_agents = set([1, 2, 3, 4, 5, 6, 100, 99])
 
         self.swm_params = {'n_agents': self.n,
                            'influence': self.influence,
@@ -120,46 +122,37 @@ class SocialWaveModel:
             Index of the current simulation step.
         """
         new_moods = np.copy(self.moods[step_number])
-        edge_list_t = []
+        new_active = set(np.random.randint(1, self.n + 1, 10))
 
         for i in range(self.n):
             # choose random neighbors
-            neighbors = list(self.graph.neighbors(i))
+            if i not in self.active_agents:
+                neighbors = list(self.graph.neighbors(i))
+                active_neighbors = [
+                    n for n in neighbors if n in self.active_agents]
 
-            # add undirected edges
-            for nb in neighbors:
-                edge_list_t.append((i, nb))
-
-            # update mood
-            noise = np.random.normal(0, self.noise)
-            if np.random.normal(0, 1)*10 < 1.4:
-                neighbor_avg = self.moods[step_number][neighbors].mean()
-                delta = self.influence * \
-                    (neighbor_avg - self.moods[step_number][i])
-                self.updated += 1
+                if len(active_neighbors) >= 2:
+                    new_active.add(i)
+                    neighbor_avg = self.moods[step_number][neighbors].mean()
+                    delta = self.influence * \
+                        (neighbor_avg - self.moods[step_number][i])
+                    new_moods[i] += delta - self.damping * \
+                        self.moods[step_number][i] + \
+                        np.random.normal(0, self.noise)
             else:
-                delta = self.damping * \
-                    self.moods[step_number][i] * 2 - noise
-
-            new_moods[i] += delta - self.damping * \
-                self.moods[step_number][i] + \
-                noise
+                continue
 
         self.moods.append(new_moods)
         self.history.append(np.mean(new_moods))
-        self.edge_lists.append(edge_list_t)
 
         # save periodically
         if (((step_number + 1) % self.save_interval == 0)
                 or (step_number + 1 == self.steps)):
-            print(f"updated {round(self.updated/(self.n*1000)*100,2)}")
-            self.updated = 0
-            self._save_step(step_number + 1, self.edge_lists)
 
-            # keep in-memory edge list for last interval
-            self.edge_lists = []
+            self._save_step(step_number + 1)
 
     # ---------------------- Run simulation ----------------------
+
     def run(self, steps=500):
         """
         Run the full simulation for a given number of steps.
@@ -205,7 +198,7 @@ class SocialWaveModel:
         return np.array(self.history)
 
     # ---------------------- Save step ----------------------
-    def _save_step(self, step_number, edge_list_t):
+    def _save_step(self, step_number):
         """
         Save simulation data for a given step interval to disk.
 
@@ -418,10 +411,26 @@ class SocialWaveModel:
 
         # рисуем граф
         pos = nx.spring_layout(self.graph, seed=42)
+        # highlighted = np.random.choice(
+        # list(self.graph.nodes()), size=3, replace=False
+        # )
+        highlighted = self.active_agents
+
+        # размеры и цвета
+        node_sizes = []
+        node_colors = []
+
+        for n in self.graph.nodes():
+            if n in highlighted:
+                node_sizes.append(300)      # больше
+                node_colors.append("red")   # другой цвет
+            else:
+                node_sizes.append(50)
+                node_colors.append("skyblue")
         plt.figure(figsize=(10, 10))
         nx.draw(self.graph, pos,
-                node_size=50,
-                node_color="skyblue",
+                node_size=node_sizes,
+                node_color=node_colors,
                 edge_color="gray",
                 linewidths=0.5)
         plt.title("Small-World Social Network")
@@ -467,7 +476,7 @@ class SocialWaveModel:
         return model
 
 
-model = SocialWaveModel(n_agents=10, influence=0.45,
+model = SocialWaveModel(n_agents=100, influence=0.45,
                         damping=0.02, noise=0.02, connections=4, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
