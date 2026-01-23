@@ -63,13 +63,14 @@ class SocialWaveModel:
         self.save_dir = save_dir
         self.new_model = new_model
         self.threshold = 3
+        self.updated_hist = []
 
         # строим Small-World граф один раз
         self.graph = nx.connected_watts_strogatz_graph(
             self.n, self.connections, p, tries=100)
 
         # self.active_agents = set(np.random.randint(1, self.n + 1, 3))
-        self.active_agents = set([1, 2, 3, 4, 5, 6, 100, 99])
+        self.active_agents = set([1, 2, 4, 5, 6, 100, 99])
 
         self.swm_params = {'n_agents': self.n,
                            'influence': self.influence,
@@ -122,7 +123,8 @@ class SocialWaveModel:
             Index of the current simulation step.
         """
         new_moods = np.copy(self.moods[step_number])
-        new_active = set(np.random.randint(1, self.n + 1, 10))
+        # new_active = set()
+        updated = 0
 
         for i in range(self.n):
             # choose random neighbors
@@ -130,9 +132,17 @@ class SocialWaveModel:
                 neighbors = list(self.graph.neighbors(i))
                 active_neighbors = [
                     n for n in neighbors if n in self.active_agents]
-
+                # if i == 10:
+                #     print('self.active_agents :', self.active_agents)
+                #     break
                 if len(active_neighbors) >= 2:
-                    new_active.add(i)
+                    self.active_agents.add(i)
+                    updated += 1
+                    i_plus_one = list(set(neighbors) - set(active_neighbors))
+                    if len(i_plus_one) > 0:
+                        self.active_agents.add(i_plus_one[0])
+                        updated += 1
+
                     neighbor_avg = self.moods[step_number][neighbors].mean()
                     delta = self.influence * \
                         (neighbor_avg - self.moods[step_number][i])
@@ -141,6 +151,7 @@ class SocialWaveModel:
                         np.random.normal(0, self.noise)
             else:
                 continue
+        self.updated_hist.append(updated)
 
         self.moods.append(new_moods)
         self.history.append(np.mean(new_moods))
@@ -184,7 +195,11 @@ class SocialWaveModel:
                 print(
                     f"Step {step_number + 1} completed. took: {round(end_step-start_step, 2)} sec")
 
+            # if step_number == 2:
+            #     break
+
         end = perf_counter()
+        print('updated :', [x for x in self.updated_hist if x > 0])
         self.full_train = f'{round(end-start, 2)} sec'
         self.swm_params['full_train'] = self.full_train
 
@@ -476,8 +491,8 @@ class SocialWaveModel:
         return model
 
 
-model = SocialWaveModel(n_agents=100, influence=0.45,
-                        damping=0.02, noise=0.02, connections=4, save_interval=1000)
+model = SocialWaveModel(n_agents=10000, influence=0.45,
+                        damping=0.02, noise=0.02, connections=6, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
@@ -534,3 +549,5 @@ model.plot_time_series(window=7, save_chart=True)
 # # Creating 3D animation (using only the latest saved data from RAM)
 # model.create_3d_dynamic_network()
 model.plot_social_network()
+
+plt.plot([x for x in model.updated_hist if x > 0])
