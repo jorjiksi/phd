@@ -23,6 +23,7 @@ Optimized SocialWaveModel
 """
 
 
+import glob
 import os
 import pickle
 import gzip
@@ -41,21 +42,34 @@ class SocialWaveModel:
     def __init__(self, n_agents=200, influence=0.2, damping=0.05, noise=0.01,
                  connections=2, save_interval=100, save_dir="swm_", new_model=True):
         """
-        n_agents: Number of agents
-        influence: Strength of influence of neighbors
-        damping: Strength of self-damping
-        noise: Random noise
-        connections: Number of connections per agent
-        save_interval: how often to save edge lists and moods to disk
-        save_dir: directory for storing data
-        """
+               n_agents: Number of agents
+               influence: Strength of influence of neighbors
+               damping: Strength of self-damping
+               noise: Random noise
+               connections: Number of connections per agent
+               save_interval: how often to save edge lists and moods to disk
+               save_dir: directory for storing data
+               """
         self.n = n_agents
+        self.delay = 1
         self.influence = influence
         self.damping = damping
         self.noise = noise
         self.connections = connections
         self.save_dir = save_dir
         self.new_model = new_model
+
+        # individual sensitivity to the environment
+        self.sensitivity = np.random.lognormal(
+            mean=0.0, sigma=0.3, size=self.n)
+
+        # individual damping
+        self.agent_damping = np.random.uniform(
+            0.5 * self.damping,
+            1.5 * self.damping,
+            self.n
+        )
+
         self.swm_params = {'n_agents': self.n,
                            'influence': self.influence,
                            'damping': self.damping,
@@ -81,29 +95,35 @@ class SocialWaveModel:
         # full history of average moods
         self.history = []
 
-    # ---------------------- Step simulation ----------------------
+        # ---------------------- Step simulation ----------------------
+
     def step(self, step_number):
         """
-        Perform a single simulation step.
+               Perform a single simulation step.
 
-        At each step, every agent randomly selects a fixed number of neighbors
-        and updates its mood based on:
-        - the average mood of selected neighbors,
-        - a self-damping term,
-        - additive Gaussian noise.
+               At each step, every agent randomly selects a fixed number of neighbors
+               and updates its mood based on:
+               - the average mood of selected neighbors,
+               - a self-damping term,
+               - additive Gaussian noise.
 
-        The method also:
-        - records the updated moods,
-        - stores the generated edge list for the current step,
-        - updates the global mood history,
-        - periodically saves data to disk based on `save_interval`.
+               The method also:
+               - records the updated moods,
+               - stores the generated edge list for the current step,
+               - updates the global mood history,
+               - periodically saves data to disk based on `save_interval`.
 
-        Parameters
-        ----------
-        step_number : int
-            Index of the current simulation step.
-        """
-        new_moods = np.copy(self.moods[step_number])
+               Parameters
+               ----------
+               step_number : int
+                   Index of the current simulation step.
+               """
+        # delayed moods (если истории мало — берём текущее)
+        if step_number >= self.delay:
+            delayed_moods = np.array(self.moods[step_number - self.delay])
+        else:
+            delayed_moods = np.array(self.moods[step_number])
+        new_moods = np.copy(delayed_moods)
         edge_list_t = []
 
         for i in range(self.n):
@@ -117,13 +137,21 @@ class SocialWaveModel:
                 edge_list_t.append((i, nb))
 
             # update mood
-            neighbor_avg = self.moods[step_number][neighbors].mean()
-            delta = self.influence * \
-                (neighbor_avg - self.moods[step_number][i])
-            new_moods[i] += delta - self.damping * \
-                self.moods[step_number][i] + \
-                np.random.normal(0, self.noise)
-
+            neighbor_avg = delayed_moods[neighbors].mean()
+            # delta = self.influence * \
+            #     (neighbor_avg - self.moods[step_number][i])
+            delta = self.influence * np.tanh(
+                self.sensitivity[i] *
+                (neighbor_avg - delayed_moods[i])
+            )
+            # new_moods[i] += delta - self.damping * \
+            #     self.moods[step_number][i] + \
+            #     np.random.normal(0, self.noise)
+            new_moods[i] += (delta
+                             - self.agent_damping[i] *
+                             delayed_moods[i]
+                             + np.random.normal(0, self.noise)
+                             )
         self.moods.append(new_moods)
         self.history.append(np.mean(new_moods))
         self.edge_lists.append(edge_list_t)
@@ -137,26 +165,27 @@ class SocialWaveModel:
             # keep in-memory edge list for last interval
             self.edge_lists = []
 
-    # ---------------------- Run simulation ----------------------
+        # ---------------------- Run simulation ----------------------
+
     def run(self, steps=500):
         """
-        Run the full simulation for a given number of steps.
+           Run the full simulation for a given number of steps.
 
-        This method iteratively calls `step()` to evolve agent moods and network
-        structure over time. Execution time statistics are recorded and stored
-        in the model metadata. Model parameters are saved to disk if the model
-        was initialized as a new instance.
+           This method iteratively calls `step()` to evolve agent moods and network
+           structure over time. Execution time statistics are recorded and stored
+           in the model metadata. Model parameters are saved to disk if the model
+           was initialized as a new instance.
 
-        Parameters
-        ----------
-        steps : int, optional
-            Number of simulation steps to execute (default is 500).
+           Parameters
+           ----------
+           steps : int, optional
+               Number of simulation steps to execute (default is 500).
 
-        Returns
-        -------
-        numpy.ndarray
-            Array containing the time series of average agent moods.
-        """
+           Returns
+           -------
+           numpy.ndarray
+               Array containing the time series of average agent moods.
+           """
         self.steps = steps
         print('start proccessing')
         start = perf_counter()
@@ -166,8 +195,8 @@ class SocialWaveModel:
             if ((step_number + 1) % self.save_interval == 0
                     or (step_number + 1 == self.steps)):
                 end_step = perf_counter()
-                print(
-                    f"Step {step_number + 1} completed. took: {round(end_step-start_step, 2)} sec")
+        print(
+            f"Step {step_number + 1} completed. took: {round(end_step-start_step, 2)} sec")
 
         end = perf_counter()
         self.full_train = f'{round(end-start, 2)} sec'
@@ -182,25 +211,26 @@ class SocialWaveModel:
 
         return np.array(self.history)
 
-    # ---------------------- Save step ----------------------
+        # ---------------------- Save step ----------------------
+
     def _save_step(self, step_number, edge_list_t):
         """
-        Save simulation data for a given step interval to disk.
+               Save simulation data for a given step interval to disk.
 
-        The method serializes and compresses:
-        - the accumulated edge lists for the interval,
-        - the full mood history up to the current step.
+               The method serializes and compresses:
+               - the accumulated edge lists for the interval,
+               - the full mood history up to the current step.
 
-        This design minimizes RAM usage during long simulations by
-        incrementally persisting intermediate results.
+               This design minimizes RAM usage during long simulations by
+               incrementally persisting intermediate results.
 
-        Parameters
-        ----------
-        step_number : int
-            Simulation step index corresponding to the saved data.
-        edge_list_t : list of list of tuple
-            Edge lists accumulated since the last save operation.
-        """
+               Parameters
+               ----------
+               step_number : int
+                   Simulation step index corresponding to the saved data.
+               edge_list_t : list of list of tuple
+                   Edge lists accumulated since the last save operation.
+               """
         # save edge_list
         fname_edges = os.path.join(
             self.save_dir, f"edges_step{step_number}.pkl.gz")
@@ -214,12 +244,13 @@ class SocialWaveModel:
 
         print(f"Saved step {step_number}")
 
-    # ---------------------- Get graph ----------------------
+        # ---------------------- Get graph ----------------------
+
     def get_graph(self, step_number):
         """
-        Return a NetworkX Graph object for given step.
-        Loads edge list from disk if saved, otherwise uses last in-memory.
-        """
+               Return a NetworkX Graph object for given step.
+               Loads edge list from disk if saved, otherwise uses last in-memory.
+               """
         fname_edges = os.path.join(
             self.save_dir, f"edges_step{step_number}.pkl.gz")
         if os.path.exists(fname_edges):
@@ -236,22 +267,22 @@ class SocialWaveModel:
     # ---------------------- Plot time series ----------------------
     def plot_time_series(self, df=None,  window=21, time_frame='',  save_chart=False, filename="mood_chart"):
         """
-        Save simulation data for a given step interval to disk.
+               Save simulation data for a given step interval to disk.
 
-        The method serializes and compresses:
-        - the accumulated edge lists for the interval,
-        - the full mood history up to the current step.
+               The method serializes and compresses:
+               - the accumulated edge lists for the interval,
+               - the full mood history up to the current step.
 
-        This design minimizes RAM usage during long simulations by
-        incrementally persisting intermediate results.
+               This design minimizes RAM usage during long simulations by
+               incrementally persisting intermediate results.
 
-        Parameters
-        ----------
-        step_number : int
-            Simulation step index corresponding to the saved data.
-        edge_list_t : list of list of tuple
-            Edge lists accumulated since the last save operation.
-        """
+               Parameters
+               ----------
+               step_number : int
+                   Simulation step index corresponding to the saved data.
+               edge_list_t : list of list of tuple
+                   Edge lists accumulated since the last save operation.
+               """
         # smooth = np.convolve(self.history, np.ones(window)/window, mode='same')
         if time_frame == '':
             df = pd.Series(self.history).copy(deep=True)
@@ -261,7 +292,8 @@ class SocialWaveModel:
         if time_frame == '':
             plt.plot(self.history, alpha=0.4, label="Raw mood")
         plt.plot(smooth, color='red', linewidth=2, label="Smoothed trend")
-        plt.title(f"Evolution of collective mood {time_frame}")
+        plt.title(
+            f"Evolution of collective mood {time_frame} for {self.n} agents")
         plt.xlabel("Time step")
         plt.ylabel("Average mood")
         plt.legend()
@@ -269,7 +301,8 @@ class SocialWaveModel:
         if save_chart:
             filename_jpg = filename + time_frame + '.jpg'
             path_jpg = f'{self.save_dir}/{filename_jpg}'
-            plt.savefig(path_jpg, format="jpg", dpi=600, bbox_inches="tight")
+            plt.savefig(path_jpg, format="jpg",
+                        dpi=600, bbox_inches="tight")
 
             # high quality
             filename_png = filename + time_frame + '.png'
@@ -284,18 +317,18 @@ class SocialWaveModel:
 
     def time_framed_series(self):
         """
-        Generate and plot aggregated time series at different temporal scales.
+               Generate and plot aggregated time series at different temporal scales.
 
-        The method computes:
-        - weekly averages (7-step aggregation),
-        - monthly averages (30-step aggregation),
+               The method computes:
+               - weekly averages (7-step aggregation),
+               - monthly averages (30-step aggregation),
 
-        and visualizes them using `plot_time_series()` with appropriate
-        smoothing windows. Resulting plots are automatically saved to disk.
+               and visualizes them using `plot_time_series()` with appropriate
+               smoothing windows. Resulting plots are automatically saved to disk.
 
-        This is intended for long simulations where coarse-grained trends
-        are more informative than step-level fluctuations.
-        """
+               This is intended for long simulations where coarse-grained trends
+               are more informative than step-level fluctuations.
+               """
         time_series = pd.Series(self.history)
         weekly_time_series = time_series.groupby(
             time_series.index // 7).mean()
@@ -310,23 +343,22 @@ class SocialWaveModel:
 
     def create_3d_dynamic_network(self, step_numbers=None):
         """
-        Create an interactive 3D animated visualization of the evolving network.
+               Create an interactive 3D animated visualization of the evolving network.
 
-        The visualization uses Plotly to display agents as nodes positioned
-        via a 3D spring layout, with edges representing social connections.
-        Node colors encode agent moods at each time step.
+               The visualization uses Plotly to display agents as nodes positioned
+               via a 3D spring layout, with edges representing social connections.
+               Node colors encode agent moods at each time step.
 
-        Edge lists and moods are loaded from disk to support large simulations
-        without excessive memory usage.
+               Edge lists and moods are loaded from disk to support large simulations
+               without excessive memory usage.
 
-        Parameters
-        ----------
-        step_numbers : list of int or None, optional
-            Specific step indices to visualize. If None, all saved steps
-            are included in the animation.
-        """
+               Parameters
+               ----------
+               step_numbers : list of int or None, optional
+                   Specific step indices to visualize. If None, all saved steps
+                   are included in the animation.
+               """
         # load edge lists
-        import glob
         edge_files = sorted(glob.glob(os.path.join(
             self.save_dir, "edges_step*.pkl.gz")))
         moods_on_disk = np.load(os.path.join(self.save_dir, "moods.npy"))
@@ -415,29 +447,30 @@ class SocialWaveModel:
         fig.show()
 
     # ---------------------- Load full or partial saved data ----------------------
+
     @staticmethod
     def load_from_disk(save_dir, model_params):
         """
-        Load a previously saved SocialWaveModel from disk.
+               Load a previously saved SocialWaveModel from disk.
 
-        The method reconstructs the model state by loading:
-        - agent mood histories,
-        - references to stored edge lists.
+               The method reconstructs the model state by loading:
+               - agent mood histories,
+               - references to stored edge lists.
 
-        Network structures are loaded lazily on demand via `get_graph()`.
+               Network structures are loaded lazily on demand via `get_graph()`.
 
-        Parameters
-        ----------
-        save_dir : str
-            Base directory where simulation data is stored.
-        model_params : dict
-            Dictionary of model parameters used to identify the saved run.
+               Parameters
+               ----------
+               save_dir : str
+                   Base directory where simulation data is stored.
+               model_params : dict
+                   Dictionary of model parameters used to identify the saved run.
 
-        Returns
-        -------
-        SocialWaveModel
-            Reconstructed model instance with history and disk-backed data access.
-        """
+               Returns
+               -------
+               SocialWaveModel
+                   Reconstructed model instance with history and disk-backed data access.
+               """
         full_path = os.getcwd()
         save_dir_path = full_path + f'/{save_dir}' + f'{model_params}'
         moods_on_disk = np.load(os.path.join(save_dir_path, "moods.npy"))
@@ -447,18 +480,21 @@ class SocialWaveModel:
 
         model = SocialWaveModel(
             n_agents=n_agents, save_dir=save_dir_path, new_model=False)
-        model.moods = [moods_on_disk[i] for i in range(moods_on_disk.shape[0])]
+        model.moods = [moods_on_disk[i]
+                       for i in range(moods_on_disk.shape[0])]
         model.history = [m.mean() for m in model.moods]
         # edge_lists will be loaded step by step through get_graph()
         return model
 
 
-model = SocialWaveModel(n_agents=10, influence=0.45,
-                        damping=0.02, noise=0.02, connections=5, save_interval=1000)
+model = SocialWaveModel(n_agents=10, influence=0.6,
+                        damping=0.02, noise=0.02, connections=2, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
 history = model.run(steps=10800)
+
+
 # # to load model and/or visualize uncomment rows bellow
 # # saved model parameters
 # swm_params = {'n_agents': 10,
@@ -467,20 +503,42 @@ history = model.run(steps=10800)
 #               'noise': 0.2,
 #               'connections': 2,
 #               'creat_date': datetime(2025, 12, 27, 21, 44, 5, 899429)}
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 5,
+#               'creat_date': datetime(2026, 1, 12, 23, 49, 54, 861448)}
+
+# swm_params = {'n_agents': 100,
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 5,
+#               'creat_date': datetime(2026, 1, 12, 23, 49, 37, 385874)}
+
+
+# swm_params = {'n_agents': 1000,
+#               'influence': 0.45,
+#               'damping': 0.02,
+#               'noise': 0.02,
+#               'connections': 5,
+#               'creat_date': datetime(2026, 1, 12, 22, 55, 17, 857993)}
 
 # swm_params = {'n_agents': 5000,
+# swm_params = {'n_agents': 10000,
 #               'influence': 0.45,
 #               'damping': 0.02,
 #               'noise': 0.02,
 #               'connections': 5,
 #               'creat_date': datetime(2026, 1, 12, 0, 47, 15, 185192)}
+#               'creat_date': datetime(2026, 1, 12, 23, 46, 20, 197166)}
 
 #  load data
 # model = model.load_from_disk('swm_', swm_params)
 
 # # Plotting a time series
-# model.plot_time_series(window=7, save_chart=True)
+model.plot_time_series(window=7, save_chart=True)
 # model.time_framed_series()
 
 # # Creating 3D animation (using only the latest saved data from RAM)
-# model.create_3d_dynamic_network()
+model.create_3d_dynamic_network()
