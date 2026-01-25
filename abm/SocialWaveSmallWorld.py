@@ -213,7 +213,7 @@ model = SocialWaveSmallWorld(
     noise=0.03
 )
 
-ts = model.run(steps=800)
+ts = model.run(steps=10800)
 
 results[sizes] = {
     "time_series": ts,
