@@ -5,8 +5,10 @@ Created on Fri Jan 23 08:48:40 2026
 
 @author: oleg
 """
+import pandas as pd
 import numpy as np
 import networkx as nx
+from networkx.algorithms import community
 
 from time import perf_counter
 
@@ -34,6 +36,7 @@ class SocialWaveSmallWorld:
         self.damping = damping
         self.noise = noise
         self.save_interval = save_interval
+        self.delay = 0
 
         # --- small-world topology ---
         self.G = nx.watts_strogatz_graph(n_agents, k, p)
@@ -41,32 +44,37 @@ class SocialWaveSmallWorld:
         # fixed layout (ВАЖНО для динамики)
         self.pos = nx.spring_layout(self.G, seed=seed)
 
-        # agent states
-        self.moods = np.random.uniform(-0.2, 0.2, n_agents)
+        # initial agent moods
+        self.mood_history = [np.random.uniform(-0.2, 0.2, n_agents)]
 
         # history
         self.history = []
-        self.mood_history = []
         self.network_metrics = []
 
-    def step(self):
-        new_moods = self.moods.copy()
+    def step(self, step_number):
+        if step_number >= self.delay:
+            delayed_moods = np.array(
+                self.mood_history[step_number - self.delay])
+        else:
+            delayed_moods = np.array(self.mood_history[step_number])
+        new_moods = np.copy(delayed_moods)
 
         for i in range(self.n):
             neighbors = list(self.G.neighbors(i))
             if not neighbors:
                 continue
 
-            neighbor_avg = np.mean(self.moods[neighbors])
+            neighbor_avg = np.mean(new_moods[neighbors])
 
-            delta = self.influence * (neighbor_avg - self.moods[i])
+            delta = self.influence * \
+                (neighbor_avg - delayed_moods[i])
             noise = np.random.normal(0, self.noise)
 
-            new_moods[i] += delta - self.damping * self.moods[i] + noise
+            new_moods[i] += delta - self.damping * \
+                delayed_moods[i] + noise
 
-        self.moods = new_moods
-        self.history.append(np.mean(self.moods))
-        self.mood_history.append(self.moods.copy())
+        self.history.append(np.mean(new_moods))
+        self.mood_history.append(new_moods)
 
         self._collect_network_metrics()
 
@@ -74,7 +82,7 @@ class SocialWaveSmallWorld:
         self.steps = steps
         for step_number in range(steps):
             start_step = perf_counter()
-            self.step()
+            self.step(step_number)
             if ((step_number + 1) % self.save_interval == 0
                     or (step_number + 1 == self.steps)):
                 end_step = perf_counter()
@@ -82,6 +90,12 @@ class SocialWaveSmallWorld:
                     f"Step {step_number + 1} completed. took: {round(end_step-start_step, 2)} sec")
 
         return np.array(self.history)
+
+    def get_states(self):
+        """
+        Возвращает состояния агентов в виде np.array
+        """
+        return np.array(self.moods)
 
     def _collect_network_metrics(self):
         metrics = {
@@ -201,19 +215,134 @@ class SocialWaveSmallWorld:
         return anim
 
 
-sizes = 10  # [10, 100, 1000]
+class SocialWaveVisualizer:
+
+    def __init__(self, model, cluster_size=15):
+        """
+        model — экземпляр SocialWaveSmallWorld
+        cluster_size — сколько узлов брать в локальный кластер
+        """
+        self.model = model
+        self.G = model.G
+        self.cluster_size = cluster_size
+
+        self.global_mean = []
+        self.variance = []
+        self.cluster_means = {}
+
+        self._init_clusters()
+
+    def _init_clusters(self):
+        """Find clusters byt Louvain method"""
+        np.random.seed(42)
+
+        self.cluster_nodes = community.louvain_communities(self.model.G)
+
+        for i in range(len(self.cluster_nodes)):
+            self.cluster_means[i] = []
+
+    def collect_step(self, step_number):
+        """Собираем наблюдаемые на текущем шаге"""
+        states = self.model.mood_history[step_number]
+        self.global_mean.append(states.mean())
+        self.variance.append(states.var())
+
+        for i, cluster in enumerate(self.cluster_nodes):
+            self.cluster_means[i].append(states[list(cluster)].mean())
+
+    def plot_results(self, history=None):
+
+        t = range(len(self.global_mean))
+
+        fig, axes = plt.subplots(3, 1, figsize=(20, 15), sharex=True)
+
+        # --- Global mean ---
+        axes[0].plot(t, self.global_mean, lw=2)
+        axes[0].set_title("Global mean (волны исчезают)")
+        axes[0].set_ylabel("⟨emotion⟩")
+
+        # --- Cluster means ---
+        for i, series in self.cluster_means.items():
+            axes[i+1].plot(t, series, alpha=0.8)
+            if i == 0:
+                break
+
+        axes[1].set_title("Local cluster means (волны живут)")
+        axes[1].set_ylabel("⟨emotion⟩_cluster")
+
+        # --- Variance ---
+        axes[2].plot(t, self.variance, color="black", lw=2)
+        axes[2].set_title("Variance (скрытая коллективная динамика)")
+        axes[2].set_ylabel("Var(emotion)")
+        axes[2].set_xlabel("time step")
+
+        plt.tight_layout()
+        plt.show()
+
+    def plot_time_series(self,  df=None,  window=21, time_frame='',  save_chart=False, filename="mood_chart"):
+        """
+        Save simulation data for a given step interval to disk.
+
+        The method serializes and compresses:
+        - the accumulated edge lists for the interval,
+        - the full mood history up to the current step.
+
+        This design minimizes RAM usage during long simulations by
+        incrementally persisting intermediate results.
+
+        Parameters
+        ----------
+        step_number : int
+            Simulation step index corresponding to the saved data.
+        edge_list_t : list of list of tuple
+            Edge lists accumulated since the last save operation.
+        """
+        # smooth = np.convolve(self.history, np.ones(window)/window, mode='same')
+
+        if time_frame == '':
+            df = pd.Series(self.history).copy(deep=True)
+        smooth = pd.Series(df).rolling(
+            window=window, center=True).mean()
+        plt.figure(figsize=(12, 6))
+        if time_frame == '':
+            plt.plot(self.history, alpha=0.4, label="Raw mood")
+        plt.plot(smooth, color='red', linewidth=2, label="Smoothed trend")
+        plt.title(
+            f"Evolution of collective mood {time_frame} for {self.model.n} agents")
+        plt.xlabel("Time step")
+        plt.ylabel("Average mood")
+        plt.legend()
+        plt.grid(True)
+        if save_chart:
+            filename_jpg = filename + time_frame + '.jpg'
+            path_jpg = f'{self.save_dir}/{filename_jpg}'
+            plt.savefig(path_jpg, format="jpg", dpi=600, bbox_inches="tight")
+
+            # high quality
+            filename_png = filename + time_frame + '.png'
+            path_png = f'{self.save_dir}/{filename_png}'
+            plt.savefig(path_png, dpi=600, bbox_inches="tight")
+
+            # vecrtor quality
+            filename_svg = filename + time_frame + '.svg'
+            path_svg = f'{self.save_dir}/{filename_svg}'
+            plt.savefig(path_svg, format="svg", bbox_inches="tight")
+        plt.show()
+
+
+sizes = 100  # [10, 100, 1000]
 results = {}
 
 model = SocialWaveSmallWorld(
     n_agents=sizes,
-    k=min(6, sizes-1),
+    k=min(5, sizes-1),
     p=0.1,
     influence=0.45,
     damping=0.02,
-    noise=0.03
+    noise=0.02
 )
 
-ts = model.run(steps=10800)
+ts = model.run(steps=500)
 
 results[sizes] = {
     "time_series": ts,
@@ -221,4 +350,15 @@ results[sizes] = {
 }
 
 # model.plot_network_static(step=150)
-model.plot_network_dynamic(steps=200, interval=150, auto_stop=False)
+# model.plot_network_dynamic(steps=200, interval=150, auto_stop=False)
+
+viz = SocialWaveVisualizer(model)
+
+for step in range(model.steps):
+    viz.collect_step(step)
+
+viz.plot_results()
+
+# for i in range(len(viz.cluster_means)):
+#     viz.plot_time_series(viz.cluster_means[i], window=7,
+#                          time_frame='yes')

@@ -215,6 +215,7 @@ __marimo__/
 
 # result.txt
 /abm/result.txt
+/abm/results/*.*
 
 # run_abm.sh
 /abm/run_abm.sh

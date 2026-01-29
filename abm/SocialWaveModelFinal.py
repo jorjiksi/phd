@@ -1,288 +1,414 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jan 23 11:34:48 2026
-
-@author: oleg
-"""
+from matplotlib.widgets import Button
+from matplotlib.animation import FuncAnimation
+import matplotlib.pyplot as plt
 import os
 import pickle
 import gzip
 from datetime import datetime
 import numpy as np
 import networkx as nx
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 
 
-class SocialWaveModelFinal:
-    def __init__(self, n_agents=200, influence=0.2, damping=0.05, noise=0.01,
-                 connections=2, steps=500, save_interval=None, save_dir_base="swm_",
-                 new_model=True):
-        """
-        Финальный класс модели SocialWave.
+class SocialWaveSmallWorld:
+    """
+    Agent-based model of collective emotional dynamics
+    on a Watts–Strogatz small-world network
+    with full checkpointing and recovery support.
+    """
 
-        Параметры
-        ----------
-        n_agents : int
-            Количество агентов
-        influence : float
-            Сила влияния соседей
-        damping : float
-            Само-демпфирование агента
-        noise : float
-            Стохастический шум
-        connections : int
-            Количество связей на шаг
-        steps : int
-            Количество шагов симуляции
-        save_interval : int, optional
-            Интервал сохранения (по умолчанию считается автоматически)
-        save_dir_base : str
-            Базовое имя папки для сохранений
-        new_model : bool
-            True, если создаём новую модель
-        """
-        self.n = n_agents
-        self.steps = steps
-        self.influence = influence
-        self.damping = damping
-        self.noise = noise
-        self.connections = connections
-        self.new_model = new_model
+    def __init__(
+        self,
+        n_agents=1000,
+        k=4,
+        p_rewire=0.1,
+        influence=0.45,
+        damping=0.02,
+        noise=0.02,
+        steps=1000,
+        seed=None,
+        base_dir="runs",
+        resume_from=None,
+    ):
+        self.seed = seed
+        if seed is not None:
+            np.random.seed(seed)
 
-        # индивидуальные параметры
-        self.sensitivity = np.random.lognormal(mean=0, sigma=0.3, size=self.n)
-        self.agent_damping = np.random.uniform(
-            0.5*self.damping, 1.5*self.damping, self.n)
+        self.n_agents = int(n_agents)
+        self.k = int(k)
+        self.p_rewire = float(p_rewire)
+        self.influence = float(influence)
+        self.damping = float(damping)
+        self.noise = float(noise)
+        self.steps = int(steps)
 
-        # дата/время создания модели
-        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Time bookkeeping
+        self.current_step = 0
 
-        # уникальная папка для сохранения
-        self.save_dir = os.path.join(save_dir_base,
-                                     f"N{self.n}_steps{self.steps}_inf{self.influence}_damp{self.damping}_{self.timestamp}")
-        os.makedirs(self.save_dir, exist_ok=True)
+        # === Directory & run ID ===
+        if resume_from is None:
+            self.start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            self.run_id = (
+                f"N{self.n_agents}_k{self.k}_p{self.p_rewire}_"
+                f"inf{self.influence}_damp{self.damping}_"
+                f"noise{self.noise}_{self.start_time}"
+            )
+            self.run_dir = os.path.join(base_dir, self.run_id)
+            os.makedirs(self.run_dir, exist_ok=True)
 
-        # save_interval: автоматически для больших моделей
-        if save_interval is None:
-            # примерно 100–500 файлов на модель, адаптируем под размер
-            approx_saves = 500
-            self.save_interval = max(1, steps // approx_saves)
+            self._init_model()
+            self._init_storage()
+
         else:
-            self.save_interval = save_interval
+            self.run_dir = resume_from
+            self._load_checkpoint()
 
-        # граф сети
-        self.G = nx.watts_strogatz_graph(self.n, min(6, self.n-1), 0.1)
-        # фиксированное расположение для анимации
-        self.pos = nx.spring_layout(self.G, seed=42)
+        # === Adaptive save interval ===
+        self.save_every = self._compute_save_interval()
 
-        # инициализация состояний
-        np.random.seed(42)
-        self.moods = [np.random.uniform(-0.2, 0.2, self.n)]
-        self.edge_lists = []
-        self.history = []
+    # ------------------------------------------------------------------
+    # Initialization
+    # ------------------------------------------------------------------
 
-        # если новая модель — сохраняем параметры
-        self.swm_params = {
-            'n_agents': self.n,
-            'steps': self.steps,
-            'influence': self.influence,
-            'damping': self.damping,
-            'noise': self.noise,
-            'connections': self.connections,
-            'timestamp': self.timestamp,
-            'save_interval': self.save_interval
-        }
-        if new_model:
-            self._save_params()
-
-    # ---------------------- Step simulation ----------------------
-    def step(self, step_number):
-        if step_number >= len(self.moods):
-            raise ValueError("Step number exceeds recorded moods length!")
-
-        delayed_moods = np.array(self.moods[step_number])
-        new_moods = np.copy(delayed_moods)
-        edge_list_t = []
-
-        for i in range(self.n):
-            possible = np.delete(np.arange(self.n), i)
-            neighbors = np.random.choice(
-                possible, self.connections, replace=False)
-            for nb in neighbors:
-                edge_list_t.append((i, nb))
-
-            neighbor_avg = delayed_moods[neighbors].mean()
-            delta = self.influence * \
-                np.tanh(self.sensitivity[i] *
-                        (neighbor_avg - delayed_moods[i]))
-            new_moods[i] += delta - self.agent_damping[i] * \
-                delayed_moods[i] + np.random.normal(0, self.noise)
-
-        self.moods.append(new_moods)
-        self.history.append(np.mean(new_moods))
-        self.edge_lists.append(edge_list_t)
-
-        # инкрементальное сохранение
-        if ((step_number + 1) % self.save_interval == 0) or (step_number + 1 == self.steps):
-            self._save_step(step_number+1)
-            self.edge_lists = []
-
-    # ---------------------- Run simulation ----------------------
-    def run(self, start_step=0):
-        """
-        Запуск симуляции с любого шага (для продолжения после остановки)
-        """
-        for step_number in range(start_step, self.steps):
-            self.step(step_number)
-            print(f"Step {step_number+1}/{self.steps} completed.")
-
-        print("Simulation finished.")
-
-    # ---------------------- Save model and data ----------------------
-    def _save_params(self):
-        fname = os.path.join(self.save_dir, "swm_params.pkl")
-        with open(fname, "wb") as f:
-            pickle.dump(self.swm_params, f)
-
-    def _save_step(self, step_number):
-        # сохраняем edge lists
-        fname_edges = os.path.join(
-            self.save_dir, f"edges_step{step_number}.pkl.gz")
-        with gzip.open(fname_edges, "wb") as f:
-            pickle.dump(self.edge_lists, f)
-
-        # moods
-        fname_moods = os.path.join(self.save_dir, "moods.npy")
-        np.save(fname_moods, self.moods)
-
-        # история
-        fname_history = os.path.join(self.save_dir, "history.npy")
-        np.save(fname_history, self.history)
-
-        print(f"Saved step {step_number}")
-
-    # ---------------------- Load model ----------------------
-    @staticmethod
-    def load_from_disk(save_dir):
-        """
-        Загружает модель из указанной папки и позволяет продолжить симуляцию
-        """
-        # параметры модели
-        with open(os.path.join(save_dir, "swm_params.pkl"), "rb") as f:
-            params = pickle.load(f)
-
-        model = SocialWaveModelFinal(
-            n_agents=params['n_agents'],
-            influence=params['influence'],
-            damping=params['damping'],
-            noise=params['noise'],
-            connections=params['connections'],
-            steps=params['steps'],
-            save_interval=params['save_interval'],
-            new_model=False
+    def _init_model(self):
+        self.graph = nx.watts_strogatz_graph(
+            n=self.n_agents,
+            k=self.k,
+            p=self.p_rewire,
+            seed=self.seed,
         )
 
-        # состояние
-        moods = np.load(os.path.join(save_dir, "moods.npy"), allow_pickle=True)
-        history = np.load(os.path.join(save_dir, "history.npy"))
-        model.moods = moods.tolist()
-        model.history = history.tolist()
+        # Agent emotional states
+        self.emotions = np.random.uniform(-0.2, 0.2, self.n_agents)
 
-        # граф
-        model.G = nx.watts_strogatz_graph(model.n, min(6, model.n-1), 0.1)
-        model.pos = nx.spring_layout(model.G, seed=42)
+    def _init_storage(self):
+        self.mean_emotion_ts = []
 
-        return model
+        self.params = {
+            "n_agents": self.n_agents,
+            "k": self.k,
+            "p_rewire": self.p_rewire,
+            "influence": self.influence,
+            "damping": self.damping,
+            "noise": self.noise,
+            "steps": self.steps,
+            "seed": self.seed,
+            "start_time": self.start_time,
+        }
 
-    # ---------------------- Get graph ----------------------
-    def get_graph(self, step_number):
-        fname_edges = os.path.join(
-            self.save_dir, f"edges_step{step_number}.pkl.gz")
-        if os.path.exists(fname_edges):
-            with gzip.open(fname_edges, "rb") as f:
-                edge_list_t = pickle.load(f)
+        self._save_params()
+
+    # ------------------------------------------------------------------
+    # Core dynamics
+    # ------------------------------------------------------------------
+
+    def step(self):
+        new_emotions = self.emotions.copy()
+
+        for i in range(self.n_agents):
+            neighbors = list(self.graph.neighbors(i))
+            if neighbors:
+                neighbor_avg = np.mean(self.emotions[neighbors])
+                delta = self.influence * (neighbor_avg - self.emotions[i])
+                noise = np.random.normal(0, self.noise)
+
+                new_emotions[i] += delta - self.damping * \
+                    new_emotions[i] + noise
+
+        self.emotions = new_emotions
+        self.current_step += 1
+
+        self.mean_emotion_ts.append(float(np.mean(self.emotions)))
+
+    # ------------------------------------------------------------------
+    # Running
+    # ------------------------------------------------------------------
+
+    def run(self):
+        try:
+            while self.current_step < self.steps:
+                self.step()
+
+                if self.current_step % self.save_every == 0:
+                    self._save_checkpoint()
+
+        except Exception as e:
+            print("⚠️ Model interrupted, saving checkpoint...")
+            self._save_checkpoint()
+            raise e
+
+        self._save_checkpoint(final=True)
+
+    # ------------------------------------------------------------------
+    # Saving logic
+    # ------------------------------------------------------------------
+
+    def _compute_save_interval(self):
+        # Heuristic for large-scale runs
+        target_checkpoints = min(1000, max(10, int(1e8 / self.n_agents)))
+        return max(1, self.steps // target_checkpoints)
+
+    def _save_params(self):
+        path = os.path.join(self.run_dir, "params.pkl")
+        with open(path, "wb") as f:
+            pickle.dump(self.params, f)
+
+    def _save_checkpoint(self, final=False):
+        state = {
+            "current_step": self.current_step,
+            "emotions": self.emotions,
+            "mean_emotion_ts": self.mean_emotion_ts,
+        }
+
+        name = (
+            "checkpoint_final.pkl.gz"
+            if final
+            else f"checkpoint_step_{self.current_step}.pkl.gz"
+        )
+
+        path = os.path.join(self.run_dir, name)
+
+        with gzip.open(path, "wb") as f:
+            pickle.dump(state, f)
+
+    # ------------------------------------------------------------------
+    # Loading logic
+    # ------------------------------------------------------------------
+
+    def _load_checkpoint(self):
+        # Load params
+        with open(os.path.join(self.run_dir, "params.pkl"), "rb") as f:
+            self.params = pickle.load(f)
+
+        for k, v in self.params.items():
+            setattr(self, k, v)
+
+        # Find latest checkpoint
+        checkpoints = [
+            f for f in os.listdir(self.run_dir)
+            if f.startswith("checkpoint_step")
+        ]
+
+        if not checkpoints:
+            raise RuntimeError("No checkpoints found to resume from.")
+
+        latest = max(
+            checkpoints,
+            key=lambda x: int(x.split("_")[-1].split(".")[0])
+        )
+
+        with gzip.open(os.path.join(self.run_dir, latest), "rb") as f:
+            state = pickle.load(f)
+
+        self.current_step = state["current_step"]
+        self.emotions = state["emotions"]
+        self.mean_emotion_ts = state["mean_emotion_ts"]
+
+        # Rebuild network
+        self.graph = nx.watts_strogatz_graph(
+            n=self.n_agents,
+            k=self.k,
+            p=self.p_rewire,
+            seed=self.seed,
+        )
+
+    # ------------------------------------------------------------------
+    # Convenience
+    # ------------------------------------------------------------------
+
+    @classmethod
+    def from_saved_run(cls, run_dir):
+        return cls(resume_from=run_dir)
+
+
+class SocialWaveVisualizer:
+    """
+    Visualization layer for SocialWaveSmallWorld.
+    Handles static network plots, dynamic animations,
+    and time series visualization with controls.
+    """
+
+    def __init__(
+        self,
+        model,
+        max_nodes_draw=1000,
+        interval=50
+    ):
+        self.model = model
+        self.interval = interval
+        self.max_nodes_draw = max_nodes_draw
+
+        self.anim = None
+        self.running = True
+
+        # --- node sampling for large systems ---
+        if model.n_agents > max_nodes_draw:
+            self.draw_nodes = np.random.choice(
+                model.n_agents,
+                max_nodes_draw,
+                replace=False
+            )
         else:
-            edge_list_t = self.edge_lists
+            self.draw_nodes = np.arange(model.n_agents)
 
-        G = nx.Graph()
-        G.add_nodes_from(range(self.n))
-        G.add_edges_from(edge_list_t)
-        return G
+        self.subgraph = model.graph.subgraph(self.draw_nodes)
+        self.pos = nx.spring_layout(self.subgraph, seed=42)
 
-    # ---------------------- Plot time series ----------------------
-    def plot_time_series(self, window=21, save_chart=False, filename="mood_chart"):
-        import pandas as pd
-        df = pd.Series(self.history)
-        smooth = df.rolling(window=window, center=True).mean()
-        plt.figure(figsize=(12, 6))
-        plt.plot(self.history, alpha=0.4, label="Raw mood")
-        plt.plot(smooth, color='red', linewidth=2, label="Smoothed trend")
-        plt.title(f"Evolution of collective mood ({self.n} agents)")
-        plt.xlabel("Time step")
-        plt.ylabel("Average mood")
-        plt.legend()
-        plt.grid(True)
-        if save_chart:
-            plt.savefig(os.path.join(self.save_dir,
-                        f"{filename}.png"), dpi=600)
-        plt.show()
+    # ==========================================================
+    # Static network plot
+    # ==========================================================
 
-    # ---------------------- Static network ----------------------
-    def plot_network_static(self, step=-1):
-        moods = self.moods[step]
+    def plot_network_static(self):
+        emotions = self.model.emotions[self.draw_nodes]
+
         plt.figure(figsize=(8, 8))
-        nodes = nx.draw_networkx_nodes(
-            self.G, self.pos, node_color=moods, cmap="RdBu", node_size=80)
-        nx.draw_networkx_edges(self.G, self.pos, alpha=0.3)
-        plt.colorbar(nodes, label="Agent mood")
-        plt.title(f"Social network snapshot (step {step})")
-        plt.axis("off")
+        nx.draw(
+            self.subgraph,
+            self.pos,
+            node_color=emotions,
+            cmap="coolwarm",
+            node_size=30,
+            edge_color="gray",
+            alpha=0.8
+        )
+        plt.title("Static snapshot of emotional state")
+        plt.colorbar(
+            plt.cm.ScalarMappable(cmap="coolwarm"),
+            label="Emotion"
+        )
         plt.show()
 
-    # ---------------------- Dynamic network + time series ----------------------
-    def plot_network_dynamic(self, steps=None, interval=200, repeat=True):
+    # ==========================================================
+    # Dynamic animation
+    # ==========================================================
+
+    def plot_network_dynamic(self, steps=None):
         if steps is None:
-            steps = len(self.moods)
-        steps = min(steps, len(self.moods))
+            steps = self.model.steps - self.model.current_step
 
-        fig, (ax_net, ax_ts) = plt.subplots(1, 2, figsize=(
-            14, 6), gridspec_kw={"width_ratios": [1.2, 1]})
-        ax_net.axis("off")
-        ax_net.set_title("Social network dynamics")
+        self.fig, (self.ax_net, self.ax_ts) = plt.subplots(
+            1, 2, figsize=(14, 6)
+        )
 
-        nodes = nx.draw_networkx_nodes(
-            self.G, self.pos, node_color=self.moods[0], cmap="RdBu", node_size=80, ax=ax_net)
-        nx.draw_networkx_edges(self.G, self.pos, alpha=0.3, ax=ax_net)
-        cbar = plt.colorbar(nodes, ax=ax_net, fraction=0.046)
-        cbar.set_label("Agent mood")
+        # --- network plot ---
+        self.nodes = nx.draw_networkx_nodes(
+            self.subgraph,
+            self.pos,
+            node_color=self.model.emotions[self.draw_nodes],
+            cmap="coolwarm",
+            node_size=30,
+            ax=self.ax_net
+        )
+        nx.draw_networkx_edges(
+            self.subgraph,
+            self.pos,
+            ax=self.ax_net,
+            alpha=0.3
+        )
 
-        ax_ts.set_title("Average collective mood")
-        ax_ts.set_xlabel("Time step")
-        ax_ts.set_ylabel("Mean mood")
-        ax_ts.set_xlim(0, steps)
-        ymin = min(self.history[:steps])
-        ymax = max(self.history[:steps])
-        margin = 0.1 * (ymax - ymin + 1e-9)
-        ax_ts.set_ylim(ymin-margin, ymax+margin)
-        ts_line, = ax_ts.plot([], [], color="black", linewidth=2)
+        self.ax_net.set_title("Network dynamics")
+        self.ax_net.axis("off")
 
-        def update(frame):
-            nodes.set_array(self.moods[frame])
-            xdata = np.arange(frame+1)
-            ydata = self.history[:frame+1]
-            ts_line.set_data(xdata, ydata)
-            ax_net.set_title(f"Network (step {frame})")
-            return nodes, ts_line
+        # --- time series plot ---
+        self.ts_line, = self.ax_ts.plot(
+            self.model.mean_emotion_ts,
+            lw=2
+        )
+        self.ax_ts.set_title("Mean emotion over time")
+        self.ax_ts.set_xlabel("Step")
+        self.ax_ts.set_ylabel("Mean emotion")
 
-        anim = FuncAnimation(fig, update, frames=steps,
-                             interval=interval, blit=False, repeat=repeat)
-        plt.tight_layout()
+        self._add_buttons()
+
+        self.anim = FuncAnimation(
+            self.fig,
+            self._update,
+            frames=steps,
+            interval=self.interval,
+            repeat=False
+        )
+
         plt.show()
-        return anim
+
+    # ==========================================================
+    # Update function
+    # ==========================================================
+
+    def _update(self, frame):
+        if not self.running:
+            return
+
+        self.model.step()
+
+        emotions = self.model.emotions[self.draw_nodes]
+        self.nodes.set_array(emotions)
+
+        self.ts_line.set_data(
+            np.arange(len(self.model.mean_emotion_ts)),
+            self.model.mean_emotion_ts
+        )
+        self.ax_ts.relim()
+        self.ax_ts.autoscale_view()
+
+        return self.nodes, self.ts_line
+
+    # ==========================================================
+    # Buttons
+    # ==========================================================
+
+    def _add_buttons(self):
+        ax_play = plt.axes([0.15, 0.02, 0.1, 0.05])
+        ax_pause = plt.axes([0.27, 0.02, 0.1, 0.05])
+        ax_reset = plt.axes([0.39, 0.02, 0.1, 0.05])
+
+        self.btn_play = Button(ax_play, "Play")
+        self.btn_pause = Button(ax_pause, "Pause")
+        self.btn_reset = Button(ax_reset, "Reset")
+
+        self.btn_play.on_clicked(self._play)
+        self.btn_pause.on_clicked(self._pause)
+        self.btn_reset.on_clicked(self._reset)
+
+    def _play(self, event):
+        self.running = True
+
+    def _pause(self, event):
+        self.running = False
+
+    def _reset(self, event):
+        self.running = False
+
+        # reset model state
+        self.model.current_step = 0
+        self.model.mean_emotion_ts = []
+        self.model.emotions = np.random.uniform(-0.2, 0.2, self.model.n_agents
+                                                )
+
+        self.nodes.set_array(
+            self.model.emotions[self.draw_nodes]
+        )
+        self.ts_line.set_data([], [])
+
+        self.ax_ts.relim()
+        self.ax_ts.autoscale_view()
+
+        self.fig.canvas.draw_idle()
 
 
-model = SocialWaveModelFinal()
+# new run
+model = SocialWaveSmallWorld(
+    n_agents=10,
+    steps=500,
+    p_rewire=0.1,
+    seed=42
+)
 model.run()
-model.plot_network_dynamic(steps=300, interval=150)
+
+viz = SocialWaveVisualizer(model)
+viz.plot_network_dynamic()
+
+
+# # continue after break
+# model = SocialWaveSmallWorld.from_saved_run(
+#     "runs/N100000_k4_p0.05_inf0.2_damp0.05_noise0.01_2026-01-27_10-42-11"
+# )
+# model.run()
