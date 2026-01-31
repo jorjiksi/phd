@@ -206,11 +206,11 @@ results = {}
 
 model = SocialWaveSmallWorld(
     n_agents=sizes,
-    k=min(6, sizes-1),
+    k=min(5, sizes-1),
     p=0.1,
     influence=0.45,
     damping=0.02,
-    noise=0.03
+    noise=0.02
 )
 
 ts = model.run(steps=10800)

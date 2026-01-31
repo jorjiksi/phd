@@ -261,7 +261,7 @@ class SocialWaveModel:
         if time_frame == '':
             plt.plot(self.history, alpha=0.4, label="Raw mood")
         plt.plot(smooth, color='red', linewidth=2, label="Smoothed trend")
-        plt.title(f"Evolution of collective mood {time_frame}")
+        plt.title(f"Evolution of collective mood for {self.n} {time_frame}")
         plt.xlabel("Time step")
         plt.ylabel("Average mood")
         plt.legend()
@@ -454,7 +454,7 @@ class SocialWaveModel:
 
 
 model = SocialWaveModel(n_agents=10, influence=0.45,
-                        damping=0.02, noise=0.02, connections=5, save_interval=1000)
+                        damping=0.02, noise=0.02, connections=3, save_interval=1000)
 
 # run for 10800 step - if 1 step is 1 real day, then 10800 it is around 30 years
 # 30 year will give option analyse almost with all possible tools fot time series
