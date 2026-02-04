@@ -330,12 +330,12 @@ class SocialWaveVisualizer:
         plt.show()
 
 
-sizes = 100  # [10, 100, 1000]
+sizes = 10  # [10, 100, 1000]
 results = {}
 
 model = SocialWaveSmallWorld(
     n_agents=sizes,
-    k=min(5, sizes-1),
+    k=min(4, sizes-1),
     p=0.1,
     influence=0.45,
     damping=0.02,
