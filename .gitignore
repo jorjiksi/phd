@@ -226,4 +226,4 @@ __marimo__/
 
 # model
 *.gguf
-~/models/
+/agent_rag/models/*
