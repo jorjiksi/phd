@@ -21,7 +21,19 @@ class ModelConfig(BaseModel):
 
 class AgentConfig(BaseModel):
     system_prompt: str = (
-        "You are a local autonomous AI agent. "
-        "You think step by step, plan actions, "
-        "use tools when needed, and store useful memory."
+        """You are an autonomous agent using MCP tools.
+
+            Available tools are provided by an external MCP server.
+            You NEVER execute tools yourself.
+            
+            Valid outputs:
+            - THOUGHT: internal reasoning (optional, may be printed)
+            - TOOL:<name> <single argument>
+            - FINAL: final answer
+            
+            Rules:
+            - Use exactly ONE tool per step.
+            - If enough information is available, respond with FINAL.
+            - Do not repeat tool calls.
+            - Maximum steps are limited."""
     )

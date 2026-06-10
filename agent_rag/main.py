@@ -5,14 +5,22 @@ Created on Tue Dec 16 14:19:11 2025
 
 @author: oleg
 """
+import os
+import asyncio
+
 from config import ModelConfig, AgentConfig
 from llm import LocalLLM
 from agent import Agent
 
-MODEL_PATH = "/media/oleg/D(ubuntu)/do_not_touch/rag/Qwen3-Coder-30B-A3B-Instruct-GGUF/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
+# close all internet connecions
+os.environ["HF_HUB_OFFLINE"] = "1"
+os.environ["TRANSFORMERS_OFFLINE"] = "1"
+os.environ["HF_DATASETS_OFFLINE"] = "1"
+
+MODEL_PATH = "/home/oleg/mayor.oleg.si@gmail.com/FIS/dissertation/phd/agent_rag/Qwen3-Coder-30B-A3B-Instruct-GGUF/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
 
 
-def main():
+async def main():
     llm_cfg = ModelConfig(
         model_path=MODEL_PATH,
         temperature=0.5,
@@ -27,6 +35,7 @@ def main():
 
     llm = LocalLLM(llm_cfg)
     agent = Agent(llm, agent_cfg)
+    await agent.mcp._connect()
 
     print("Local AI Agent REPL")
     print("Type a goal. 'exit' to quit.\n")
@@ -40,7 +49,7 @@ def main():
                 print("Bye.")
                 break
 
-            agent.run(goal, max_steps=10)
+            await agent.run(goal, max_steps=10)
 
         except KeyboardInterrupt:
             print("\nInterrupted.")
@@ -49,9 +58,12 @@ def main():
         except Exception as e:
             print(f"Error: {e}")
 
+        finally:
+            await agent.mcp.close()
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
 
 
 # Let's create a python code for multyplication table

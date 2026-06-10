@@ -38,7 +38,9 @@ class VectorMemory:
         self.texts_path_short = os.path.join(path, "texts_short.pkl")
 
         self.embedder = SentenceTransformer(
-            "sentence-transformers/all-MiniLM-L6-v2"
+            "sentence-transformers/all-MiniLM-L6-v2",
+            cache_folder="models",
+            local_files_only=True  # for local model
         )
 
         if os.path.exists(self.index_path):

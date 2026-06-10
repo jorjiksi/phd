@@ -222,3 +222,7 @@ __marimo__/
 
 # swm like
 /abm/swm*
+
+
+# model
+*.gguf
